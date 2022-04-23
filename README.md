@@ -7,9 +7,28 @@ This repo contains a basic Node and Express app to get you started in constructi
 ## Required Technologies
 Your application must make use of the following libraries:
 - Postgres for the database
+For install postgresaa
+ package you can follow this steps:
+https://medium.com/@dan.chiniara/installing-postgresql-for-windows-7ec8145698e3
+then use command 
+npm install pg > will add the pg in dependencies
+npm i --save-dev@types/pg > will add dev dependencies
+
 - Node/Express for the application logic
+npm init -y > will create package.json file
+npm install typescript --save-dev > will install the typescript
+tsc --init > will create the tsconfig.json file
+npm install express > will install express
+npm install --save-dev @types/express > install the express types
+
 - dotenv from npm for managing environment variables
+npm install dotenv
+npm install --save-dev @types/dotenv > install the dotenv types
+
 - db-migrate from npm for migrations
+npm install -g db-migrate > will install db-migrate globaly
+yarn add db-migrate db-migrate-pg > will install db-migrate package to the project
+
 - jsonwebtoken from npm for working with JWTs
 - jasmine from npm for testing
 
