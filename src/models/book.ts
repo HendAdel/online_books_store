@@ -1,7 +1,7 @@
 import db from "../database";
 
 export type book = {
-    id: number;
+    id?: number;
     title: string;
     author_id: number;
     category_id: number;
@@ -25,29 +25,31 @@ export class bookModel {
         }
         catch(err)
         {
-            throw new Error(`cannot get the books {$err}`);
+            throw new Error(`cannot get the books ${err}`);
         }
     }
 
-    async create(b: book): Promise<book[]> {
+    async create(b: book): Promise<book> {
         try {
-        const conn = await db.connect();
+        
         const sql = `Insert into books (title, author_id, category_id,
         publisher_id, published_year, pages, price, isbn, in_stock) 
-        values($2, $3, $4, $5, $6, $7, $8, $9, $10) returning id, title, author_id, category_id,
+        values($1, $2, $3, $4, $5, $6, $7, $8, $9) returning id, title, author_id, category_id,
         publisher_id, published_year, pages, price, isbn, in_stock`;
-        const result = await conn.query(sql, [b.id, b.title, b.author_id, b.category_id,
+        const conn = await db.connect();
+        const result = await conn.query(sql, [b.title, b.author_id, b.category_id,
             b.publisher_id, b.published_year, b.pages, b.price, b.isbn, b.in_stock]);
-        conn.release();
-        return result.rows[0];
+        const book = result.rows[0];
+            conn.release();
+        return book;
         }
         catch(err)
         {
-            throw new Error(`cannot create the new book {$err}`);
+            throw new Error(`cannot create the new book ${err}`);
         }
     }
-
-    async showById(id: string): Promise<book[]> {
+    
+    async showById(id: string): Promise<book> {
         try {
         const conn = await db.connect();
         const sql = `Select id, title, author_id, category_id,
@@ -58,11 +60,11 @@ export class bookModel {
         }
         catch(err)
         {
-            throw new Error(`cannot get the book {$err}`);
+            throw new Error(`cannot get the book ${err}`);
         }
     }
 
-    async updateById(b: book): Promise<book[]> {
+    async updateById(b: book): Promise<book> {
         try {
         const conn = await db.connect();
         const sql = `Update books set title = $2, author_id = $3, category_id = $4,
@@ -76,7 +78,7 @@ export class bookModel {
         }
         catch(err)
         {
-            throw new Error(`cannot update the book {$err}`);
+            throw new Error(`cannot update the book ${err}`);
         }
     }
 
@@ -90,7 +92,7 @@ export class bookModel {
         }
         catch(err)
         {
-            throw new Error(`cannot delete the book {$err}`);
+            throw new Error(`cannot delete the book ${err}`);
         }
     }
 }

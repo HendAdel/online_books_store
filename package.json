@@ -4,19 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx tsc && jasmine",
+    "test": "db-migrate down db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
+    "test:window": "set NODE_ENV=test && db-migrate up --env test && tsc && jasmine-ts && db-migrate down",
     "dev": "nodemon ./src/index.ts",
     "clean": "rimraf build/",
     "build": "yarn clean && npx tsc",
     "start": "npm run build && nodemon build/index.js",
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint . --ext .ts",
-    "migration_up": "db-migrate up"
+    "migration_up": "db-migrate up",
+    "migration_down": "db-migrate down"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "db-migrate": "^0.11.13",
     "db-migrate-pg": "^1.2.2",
     "dotenv": "^10.0.0",
@@ -28,6 +31,7 @@
     "supertest": "^6.1.6"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/jasmine": "^3.10.2",
     "@types/morgan": "^1.9.3",
@@ -39,6 +43,7 @@
     "eslint": "^8.13.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "jasmine-ts": "^0.4.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",

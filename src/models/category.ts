@@ -1,7 +1,7 @@
 import db from "../database";
 
 export type category = {
-    id: number;
+    id?: number;
     name: string;
 }
 
@@ -16,25 +16,25 @@ export class categoryModel {
         }
         catch(err)
         {
-            throw new Error(`cannot get the categories {$err}`);
+            throw new Error(`cannot get the categories ${err}`);
         }
     }
 
-    async create(c: category): Promise<category[]> {
+    async create(c: category): Promise<category> {
         try {
         const conn = await db.connect();
-        const sql = `Insert into categories (name) values($2) returning id, name`;
-        const result = await conn.query(sql, [c.id, c.name]);
+        const sql = `Insert into categories (name) values($1) returning id, name`;
+        const result = await conn.query(sql, [c.name]);
         conn.release();
         return result.rows[0];
         }
         catch(err)
         {
-            throw new Error(`cannot create the new category {$err}`);
+            throw new Error(`cannot create the new category ${err}`);
         }
     }
 
-    async showById(id: string): Promise<category[]> {
+    async showById(id: string): Promise<category> {
         try {
         const conn = await db.connect();
         const sql = `Select id, name from categories Where id = ($1)`;
@@ -44,11 +44,11 @@ export class categoryModel {
         }
         catch(err)
         {
-            throw new Error(`cannot get the category {$err}`);
+            throw new Error(`cannot get the category ${err}`);
         }
     }
 
-    async updateById(c: category): Promise<category[]> {
+    async updateById(c: category): Promise<category> {
         try {
         const conn = await db.connect();
         const sql = `Update categories set name = $2 Where id = ($1) returning id, name`;
@@ -58,11 +58,11 @@ export class categoryModel {
         }
         catch(err)
         {
-            throw new Error(`cannot update the category {$err}`);
+            throw new Error(`cannot update the category ${err}`);
         }
     }
 
-    async deleteById(id: string): Promise<category[]> {
+    async deleteById(id: string): Promise<category> {
         try {
         const conn = await db.connect();
         const sql = 'Delete from categories Where id = ($1)';
@@ -72,7 +72,7 @@ export class categoryModel {
         }
         catch(err)
         {
-            throw new Error(`cannot delete the category {$err}`);
+            throw new Error(`cannot delete the category ${err}`);
         }
     }
 }

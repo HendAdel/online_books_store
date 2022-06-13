@@ -1,4 +1,3 @@
-
 --CREATE USERS TABLE
 CREATE TABLE users(
     id serial primary key,

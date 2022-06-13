@@ -1,5 +1,5 @@
 /* create orders table */
-CREATE TABLE IF NOT EXISTS public.orders
+CREATE TABLE public.orders
 (
     id serial primary key,
     o_date date,

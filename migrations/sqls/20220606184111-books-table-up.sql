@@ -1,6 +1,5 @@
 /* Create books table */
-
-CREATE TABLE IF NOT EXISTS public.books
+CREATE TABLE public.books
 (
     id serial primary key,
     title varchar(100),
