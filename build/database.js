@@ -3,28 +3,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-var _a = process.env, POSTGRES_HOST = _a.POSTGRES_HOST, POSTGRES_PORT = _a.POSTGRES_PORT, POSTGRES_DB = _a.POSTGRES_DB, POSTGRES_DB_TEST = _a.POSTGRES_DB_TEST, POSTGRES_USER = _a.POSTGRES_USER, POSTGRES_PASSWORD = _a.POSTGRES_PASSWORD, NODE_ENV = _a.NODE_ENV, BCRYPT_PASSWORD = _a.BCRYPT_PASSWORD, SALT_ROUNDS = _a.SALT_ROUNDS;
-// const pool = new Pool({
-//     host: POSTGRES_HOST,
-//     port: parseInt(POSTGRES_PORT as string, 10),
-//     database: NODE_ENV === 'dev' ? POSTGRES_DB : POSTGRES_DB_TEST,
-//     user: POSTGRES_USER,
-//     password: POSTGRES_PASSWORD,
-//     crypt_salt: BCRYPT_PASSWORD,
-//     round: SALT_ROUNDS,
-// })
-// pool.on('error', (error: Error) => {
-//     console.error(`Error: ${error.message}`)
-// })
-// export default pool
-exports.default = {
-    host: POSTGRES_HOST,
-    port: parseInt(POSTGRES_PORT, 10),
-    database: NODE_ENV === 'dev' ? POSTGRES_DB : POSTGRES_DB_TEST,
-    user: POSTGRES_USER,
-    password: POSTGRES_PASSWORD,
-    crypt_salt: BCRYPT_PASSWORD,
-    round: SALT_ROUNDS,
-};
+var pg_1 = require("pg");
+var config_1 = __importDefault(require("./config"));
+var pool = new pg_1.Pool({
+    host: config_1.default.host,
+    port: config_1.default.port,
+    database: config_1.default.database,
+    user: config_1.default.user,
+    password: config_1.default.password,
+});
+pool.on('error', function (error) {
+    console.error("Error: ".concat(error.message));
+});
+exports.default = pool;

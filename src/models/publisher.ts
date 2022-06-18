@@ -54,10 +54,14 @@ export class publisherModel {
     async updateById(p: publisher): Promise<publisher> {
         try {
         const conn = await db.connect();
+        console.log("update model conn open ");
         const sql = `Update publishers set p_name = $1, p_address = $2, phone = $3 Where id = ($4)
-         returning id, title, p_address, phone`;
-         const result = await conn.query(sql, [p.id, p.p_name, p.p_address, p.phone]);
+         returning id, p_name, p_address, phone`;
+         console.log("update model sql statment: " + sql);
+         const result = await conn.query(sql, [ p.p_name, p.p_address, p.phone, p.id]);
+         console.log("update model result: " + result);
         conn.release();
+        console.log("update model conn release ");
         return result.rows[0];
         }
         catch(err)
@@ -69,7 +73,7 @@ export class publisherModel {
     async deleteById(id: string): Promise<publisher> {
         try {
         const conn = await db.connect();
-        const sql = 'Delete from publishers Where id = ($1)';
+        const sql = 'Delete from publishers Where id = ($1) returning id, p_name, p_address, phone';
         const result = await conn.query(sql, [id]);
         conn.release();
         return result.rows[0];

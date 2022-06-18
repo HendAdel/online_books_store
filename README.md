@@ -60,7 +60,14 @@ Create the models for each database table. The methods in each model should map 
 
 ### 4. Express Handlers
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled. 
+Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled.
+#### The EndPoints
+##### Users Endpoints:
+    app.post('/users', create); Create User Post method(http://localhost:3000/users)
+    app.get('/users', index); Show all users Get method(http://localhost:3000/users)
+    app.get('/users/:id', show); Show user by Id Get method(localhost:3000/users/id)
+    app.put('/users/:id', edit); Update user by Id Put method(http://localhost:3000/users/id) 
+    app.delete('/users/:id', remove); Delete user by Id Delete method(http://localhost:3000/users/id)
 
 ### 5. JWTs
 

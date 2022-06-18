@@ -5,18 +5,18 @@ const bookM = new bookModel();
 
 const create = async (req: Request, res: Response) => {
     try {
-        const bookT: book = {
-            title: req.body.title,
-            author_id: req.body.author,
-            category_id: req.body.category,
-            publisher_id: req.body.publisher,
-            published_year: req.body.published_year,
-            pages: req.body.pages,
-            price: req.body.price,
-            isbn: req.body.isbn,
-            in_stock: req.body.instock
-        }
-        const newbook = await bookM.create(bookT);
+        // const bookT: book = {
+        //     title: req.body.title,
+        //     author_id: req.body.author,
+        //     category_id: req.body.category,
+        //     publisher_id: req.body.publisher,
+        //     published_year: req.body.published_year,
+        //     pages: req.body.pages,
+        //     price: req.body.price,
+        //     isbn: req.body.isbn,
+        //     in_stock: req.body.instock
+        // }
+        const newbook = await bookM.create(req.body);
         res.json(newbook);
     }
     catch (error) {
@@ -31,25 +31,27 @@ const index = async (_req: Request, res: Response) => {
 }
 
 const show = async (req: Request, res: Response) => {
-    const book = await bookM.showById(req.body.id);
+    if (req.params.id) {
+    const book = await bookM.showById(req.params.id);
     res.json(book);
+    }
 }
 
 const edit = async (req: Request, res: Response) => {
     try {
-        const bookT: book = {
-            id: req.body.id,
-            title: req.body.title,
-            author_id: req.body.author,
-            category_id: req.body.category,
-            publisher_id: req.body.publisher,
-            published_year: req.body.published_year,
-            pages: req.body.pages,
-            price: req.body.price,
-            isbn: req.body.isbn,
-            in_stock: req.body.instock
-        }
-        const updatedbook = await bookM.updateById(bookT);
+        // const bookT: book = {
+        //     id: req.body.id,
+        //     title: req.body.title,
+        //     author_id: req.body.author,
+        //     category_id: req.body.category,
+        //     publisher_id: req.body.publisher,
+        //     published_year: req.body.published_year,
+        //     pages: req.body.pages,
+        //     price: req.body.price,
+        //     isbn: req.body.isbn,
+        //     in_stock: req.body.instock
+        // }
+        const updatedbook = await bookM.updateById(req.body);
         res.json(updatedbook);
     }
     catch (error) {

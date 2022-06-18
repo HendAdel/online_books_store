@@ -5,10 +5,10 @@ const authorM = new authorModel();
 
 const create = async (req: Request, res: Response) => {
     try {
-        const authorT: author = {
-            name: req.body.name
-        }
-        const newAuthor = await authorM.create(authorT);
+        console.log('test create author route' + req.body);        
+        const newAuthor = await authorM.create(req.body);
+        console.log('After calling create author method');
+        // const newAuthor = await authorM.create(authorT);
         res.json(newAuthor);
     }
     catch (error) {
@@ -18,22 +18,32 @@ const create = async (req: Request, res: Response) => {
 }
 
 const index = async (_req: Request, res: Response) => {
-    const authors = await authorM.index();
-    res.json(authors);
+    try {
+        const authors = await authorM.index();
+        res.json(authors);
+    }
+    catch (error) {
+        res.status(400);
+        res.json(error);
+    }   
 }
 
 const show = async (req: Request, res: Response) => {
-    const author = await authorM.showById(req.body.id);
-    res.json(author);
+    if (req.params.id) {
+        const author = await authorM.showById(req.params.id);
+        res.json(author);
+    }
+
 }
 
 const edit = async (req: Request, res: Response) => {
     try {
-        const authorT: author = {
-            id: req.body.id,
-            name: req.body.name
-        }
-        const updatedAuthor = await authorM.updateById(authorT);
+        console.log('edit handler');
+        // const authorT: author = {
+        //     id: req.body.id,
+        //     name: req.body.name
+        // }
+        const updatedAuthor = await authorM.updateById(req.body);
         res.json(updatedAuthor);
     }
     catch (error) {

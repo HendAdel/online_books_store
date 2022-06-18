@@ -42,12 +42,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userModel = void 0;
 var database_1 = __importDefault(require("../database"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
+var config_1 = __importDefault(require("../config"));
 var userModel = /** @class */ (function () {
     function userModel() {
     }
+    userModel.prototype.login_authenticate = function (u_name, u_password) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, hashedPassword, is_validPassword, user_object, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        sql = "Select u_password from users Where u_name = ($1)";
+                        return [4 /*yield*/, conn.query(sql, [u_name])];
+                    case 2:
+                        result = _a.sent();
+                        if (!(result.rows.length != 0)) return [3 /*break*/, 4];
+                        hashedPassword = result.rows[0];
+                        is_validPassword = bcrypt_1.default.compareSync(u_password + config_1.default.pepper, hashedPassword);
+                        if (!is_validPassword) return [3 /*break*/, 4];
+                        return [4 /*yield*/, conn.query("Select id, u_name, email, u_password from users Where u_name = ($1)", [u_name])];
+                    case 3:
+                        user_object = _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        conn.release();
+                        return [2 /*return*/, null];
+                    case 5:
+                        err_1 = _a.sent();
+                        throw new Error("cannot get the user ".concat(err_1));
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
     userModel.prototype.index = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, err_1;
+            var conn, sql, result, err_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -62,8 +96,8 @@ var userModel = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows];
                     case 3:
-                        err_1 = _a.sent();
-                        throw new Error("cannot get the users ".concat(err_1));
+                        err_2 = _a.sent();
+                        throw new Error("cannot get the users ".concat(err_2));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -71,7 +105,7 @@ var userModel = /** @class */ (function () {
     };
     userModel.prototype.create = function (u) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, hash, result, err_2;
+            var conn, sql, hash, result, err_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -80,15 +114,15 @@ var userModel = /** @class */ (function () {
                     case 1:
                         conn = _a.sent();
                         sql = "Insert into users (u_name, email, u_password) \n        values($1, $2, $3) returning id, u_name, email, u_password";
-                        hash = bcrypt_1.default.hashSync(u.u_password + process.env.BCRYPT_PASSWORD, parseInt(process.env.SALT_ROUNDS));
+                        hash = bcrypt_1.default.hashSync(u.u_password + config_1.default.pepper, parseInt(config_1.default.salt));
                         return [4 /*yield*/, conn.query(sql, [u.u_name, u.email, hash])];
                     case 2:
                         result = _a.sent();
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        err_2 = _a.sent();
-                        throw new Error("cannot create the new user ".concat(err_2));
+                        err_3 = _a.sent();
+                        throw new Error("cannot create the new user ".concat(err_3));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -96,7 +130,7 @@ var userModel = /** @class */ (function () {
     };
     userModel.prototype.showById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, err_3;
+            var conn, sql, result, err_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -111,8 +145,8 @@ var userModel = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        err_3 = _a.sent();
-                        throw new Error("cannot get the user ".concat(err_3));
+                        err_4 = _a.sent();
+                        throw new Error("cannot get the user ".concat(err_4));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -120,7 +154,7 @@ var userModel = /** @class */ (function () {
     };
     userModel.prototype.updateById = function (u) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, err_4;
+            var conn, sql, result, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -135,8 +169,8 @@ var userModel = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        err_4 = _a.sent();
-                        throw new Error("cannot update the user ".concat(err_4));
+                        err_5 = _a.sent();
+                        throw new Error("cannot update the user ".concat(err_5));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -144,7 +178,7 @@ var userModel = /** @class */ (function () {
     };
     userModel.prototype.deleteById = function (id) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, err_5;
+            var conn, sql, result, err_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -159,8 +193,8 @@ var userModel = /** @class */ (function () {
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
-                        err_5 = _a.sent();
-                        throw new Error("cannot delete the user ".concat(err_5));
+                        err_6 = _a.sent();
+                        throw new Error("cannot delete the user ".concat(err_6));
                     case 4: return [2 /*return*/];
                 }
             });

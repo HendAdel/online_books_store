@@ -5,12 +5,8 @@ const publisherM = new publisherModel();
 
 const create = async (req: Request, res: Response) => {
     try {
-        const publisherT: publisher = {
-            p_name: req.body.p_name,
-            p_address: req.body.p_address,
-            phone: req.body.phone
-        }
-        const newpublisher = await publisherM.create(publisherT);
+        
+        const newpublisher = await publisherM.create(req.body);
         res.json(newpublisher);
     }
     catch (error) {
@@ -25,19 +21,17 @@ const index = async (_req: Request, res: Response) => {
 }
 
 const show = async (req: Request, res: Response) => {
-    const publisher = await publisherM.showById(req.body.id);
+    if (req.params.id) {
+    const publisher = await publisherM.showById(req.params.id);
     res.json(publisher);
+}
 }
 
 const edit = async (req: Request, res: Response) => {
     try {
-        const publisherT: publisher = {
-            id: req.body.id,
-            p_name: req.body.p_name,
-            p_address: req.body.p_address,
-            phone: req.body.phone
-        }
-        const updatedpublisher = await publisherM.updateById(publisherT);
+        console.log("update handler" + req.body.p_name + " " + req.body.p_address + " " + req.body.phone + " " + req.body.id);
+        const updatedpublisher = await publisherM.updateById(req.body);
+        console.log("update handler req body: " + updatedpublisher);
         res.json(updatedpublisher);
     }
     catch (error) {

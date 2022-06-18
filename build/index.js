@@ -31,18 +31,43 @@ var publisher_1 = __importDefault(require("./handlers/publisher"));
 var user_1 = __importDefault(require("./handlers/user"));
 var book_1 = __importDefault(require("./handlers/book"));
 var order_1 = __importDefault(require("./handlers/order"));
+var database_1 = __importDefault(require("./database"));
 dotenv.config();
 var PORT = process.env.PORT || 3000;
 // create an instance server
 var app = (0, express_1.default)();
 // HTTP request logger middleware
 app.use((0, morgan_1.default)('short'));
+app.use(express_1.default.json());
 // add routing for / path
-// app.get('/', (req: Request, res: Response) => {
-//   res.json({
-//     message: 'Hello World 🌍'
-//   });
-// });
+app.get('/', function (req, res) {
+    console.log("user routes in index page");
+    database_1.default.connect().then(function (client) {
+        return client
+            .query('SELECT NOW()')
+            .then(function (res) {
+            client.release();
+            console.log(res.rows);
+        })
+            .catch(function (err) {
+            client.release();
+            console.log(err.stack);
+        });
+    });
+    res.json({
+        message: 'Hello World 🌍'
+    });
+});
+// app.use('/api', userRoutes)
+// app.get('/users', (_req: Request, res: Response) => {
+//   try {
+//     console.log(`user routes in index page`)
+//       res.send('this is the Users INDEX route')
+//   } catch (err) {
+//       res.status(400)
+//       res.json(err)
+//   }
+// })
 (0, category_1.default)(app);
 (0, publisher_1.default)(app);
 (0, user_1.default)(app);

@@ -69,7 +69,7 @@ export class orderModel {
     async deleteById(id: string): Promise<order[]> {
         try {
         const conn = await db.connect();
-        const sql = 'Delete from orders Where id = ($1)';
+        const sql = `Delete from orders Where id = ($1) returning id, o_date, o_total, user_id`;
         const result = await conn.query(sql, [id]);
         conn.release();
         return result.rows[0];

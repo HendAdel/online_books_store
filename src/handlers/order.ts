@@ -5,12 +5,12 @@ const orderM = new orderModel();
 
 const create = async (req: Request, res: Response) => {
     try {
-        const orderT: order = {
-            o_date: req.body.date, 
-            o_total: req.body.total, 
-            user_id: req.body.user
-        }
-        const neworder = await orderM.create(orderT);
+        // const orderT: order = {
+        //     o_date: req.body.date, 
+        //     o_total: req.body.total, 
+        //     user_id: req.body.user
+        // }
+        const neworder = await orderM.create(req.body);
         res.json(neworder);
     }
     catch (error) {
@@ -25,19 +25,19 @@ const index = async (_req: Request, res: Response) => {
 }
 
 const show = async (req: Request, res: Response) => {
-    const order = await orderM.showById(req.body.id);
+    const order = await orderM.showById(req.params.id);
     res.json(order);
 }
 
 const edit = async (req: Request, res: Response) => {
     try {
-        const orderT: order = {
-            id: req.body.id,
-            o_date: req.body.date, 
-            o_total: req.body.total, 
-            user_id: req.body.user
-        }
-        const updatedorder = await orderM.updateById(orderT);
+        // const orderT: order = {
+        //     id: req.body.id,
+        //     o_date: req.body.date, 
+        //     o_total: req.body.total, 
+        //     user_id: req.body.user
+        // }
+        const updatedorder = await orderM.updateById(req.body);
         res.json(updatedorder);
     }
     catch (error) {

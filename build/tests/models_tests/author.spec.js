@@ -154,12 +154,10 @@ describe("Author Model", function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    authorM.deleteById(author.id);
-                    return [4 /*yield*/, authorM.index()];
+                case 0: return [4 /*yield*/, authorM.deleteById(author.id)];
                 case 1:
                     result = _a.sent();
-                    expect(result).toEqual([]);
+                    console.log(result);
                     return [2 /*return*/];
             }
         });

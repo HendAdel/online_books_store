@@ -39,17 +39,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var author_1 = require("../models/author");
 var authorM = new author_1.authorModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var authorT, newAuthor, error_1;
+    var newAuthor, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                authorT = {
-                    name: req.body.name
-                };
-                return [4 /*yield*/, authorM.create(authorT)];
+                console.log('test create author route' + req.body);
+                return [4 /*yield*/, authorM.create(req.body)];
             case 1:
                 newAuthor = _a.sent();
+                console.log('After calling create author method');
+                // const newAuthor = await authorM.create(authorT);
                 res.json(newAuthor);
                 return [3 /*break*/, 3];
             case 2:
@@ -62,43 +62,15 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var authors;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, authorM.index()];
-            case 1:
-                authors = _a.sent();
-                res.json(authors);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var author;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, authorM.showById(req.body.id)];
-            case 1:
-                author = _a.sent();
-                res.json(author);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var authorT, updatedAuthor, error_2;
+    var authors, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                authorT = {
-                    id: req.body.id,
-                    name: req.body.name
-                };
-                return [4 /*yield*/, authorM.updateById(authorT)];
+                return [4 /*yield*/, authorM.index()];
             case 1:
-                updatedAuthor = _a.sent();
-                res.json(updatedAuthor);
+                authors = _a.sent();
+                res.json(authors);
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _a.sent();
@@ -109,8 +81,48 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); };
+var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var author;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                if (!req.query.id) return [3 /*break*/, 2];
+                return [4 /*yield*/, authorM.showById(req.body.id)];
+            case 1:
+                author = _a.sent();
+                res.json(author);
+                _a.label = 2;
+            case 2: return [2 /*return*/];
+        }
+    });
+}); };
+var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var authorT, updatedAuthor, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                console.log('edit handler');
+                authorT = {
+                    id: req.body.id,
+                    name: req.body.name
+                };
+                return [4 /*yield*/, authorM.updateById(req.body)];
+            case 1:
+                updatedAuthor = _a.sent();
+                res.json(updatedAuthor);
+                return [3 /*break*/, 3];
+            case 2:
+                error_3 = _a.sent();
+                res.status(400);
+                res.json(error_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var author, error_3;
+    var author, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -121,9 +133,9 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 res.json(author);
                 return [3 /*break*/, 3];
             case 2:
-                error_3 = _a.sent();
+                error_4 = _a.sent();
                 res.status(400);
-                res.json(error_3);
+                res.json(error_4);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

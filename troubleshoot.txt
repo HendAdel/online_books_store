@@ -1,0 +1,5 @@
+The put, post delete http method does not working
+problem solved and the problems was
+Missing to add app.use(express.json());
+Wrong Database Name
+Pass data as params not in req.body

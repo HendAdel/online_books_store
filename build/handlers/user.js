@@ -37,6 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = require("../models/user");
+var express_1 = require("express");
+var routes = (0, express_1.Router)();
 var userM = new user_1.userModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userT, newuser, error_1;
@@ -52,7 +54,8 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, userM.create(userT)];
             case 1:
                 newuser = _a.sent();
-                res.json(newuser);
+                // res.json(newuser);
+                res.send('this is the user create route');
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
@@ -70,6 +73,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0: return [4 /*yield*/, userM.index()];
             case 1:
                 users = _a.sent();
+                // res.send('this is the user index route');
                 res.json(users);
                 return [2 /*return*/];
         }
@@ -133,6 +137,8 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+// routes.route('/').post(create);
+// routes.route('/users').get(index);
 var usersRoutes = function (app) {
     app.post('/users', create);
     app.get('/users', index);
@@ -140,4 +146,4 @@ var usersRoutes = function (app) {
     app.put('/users/:id', edit);
     app.delete('/users/:id', remove);
 };
-exports.default = usersRoutes;
+exports.default = usersRoutes; //routes;

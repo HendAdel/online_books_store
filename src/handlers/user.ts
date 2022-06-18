@@ -1,17 +1,20 @@
 import express, { Request, Response } from "express";
 import { user, userModel } from "../models/user";
+import { Router } from "express";
+
+const routes = Router();
 
 const userM = new userModel();
 
 const create = async (req: Request, res: Response) => {
-    try {
-        const userT: user = {
-            u_name: req.body.name,
-            email: req.body.email,
-            u_password: req.body.password
-        }
-        const newuser = await userM.create(userT);
-        res.json(newuser);
+    try {        
+        const newuser = await userM.create(req.body);
+        res.json({
+            status: "success",
+            data: { ...newuser },
+            message: "User created successfully"
+        });
+        // res.send('this is the user create route');
     }
     catch (error) {
         res.status(400);
@@ -20,24 +23,28 @@ const create = async (req: Request, res: Response) => {
 }
 
 const index = async (_req: Request, res: Response) => {
+    console.log("Test show all users handler");
     const users = await userM.index();
+    console.log("Test show all users handler after calling index method");
+    console.log("Test show all users handler result" + users);
+    // res.send('this is the user index route');
     res.json(users);
 }
 
 const show = async (req: Request, res: Response) => {
-    const user = await userM.showById(req.body.id);
-    res.json(user);
+    console.log("Test show by id handler");
+    const oneUser = await userM.showById(req.params.id as unknown as string);
+    console.log("Test show by id after calling model method");
+    console.log("Test show by id user: " + oneUser);
+    res.json(oneUser);
 }
 
 const edit = async (req: Request, res: Response) => {
     try {
-        const userT: user = {
-            id: req.body.id,
-            u_name: req.body.name,
-            email: req.body.email,
-            u_password: req.body.password
-        }
-        const updateduser = await userM.updateById(userT);
+        console.log("Test Update by id handler");       
+        const updateduser = await userM.updateById(req.body);
+        console.log("Test update H by id after calling model method");
+        console.log("Test update H by id user: " + updateduser);
         res.json(updateduser);
     }
     catch (error) {
@@ -57,6 +64,9 @@ const remove = async (req: Request, res: Response) => {
 
 }
 
+// routes.route('/').post(create);
+// routes.route('/users').get(index);
+
 const usersRoutes = (app: express.Application) => {
     app.post('/users', create);
     app.get('/users', index);
@@ -65,4 +75,4 @@ const usersRoutes = (app: express.Application) => {
     app.delete('/users/:id', remove);
 }
 
-export default usersRoutes;
+export default usersRoutes; //routes;

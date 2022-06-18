@@ -12,6 +12,7 @@ const {
     NODE_ENV,
     BCRYPT_PASSWORD,
     SALT_ROUNDS,
+    JSON_SECRET_TOKEN,
 } = process.env;
 
 export default {
@@ -20,6 +21,7 @@ export default {
     database: NODE_ENV === 'dev' ? POSTGRES_DB : POSTGRES_DB_TEST,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
-    salt: BCRYPT_PASSWORD,
-    round: SALT_ROUNDS,
+    pepper: BCRYPT_PASSWORD,
+    salt: SALT_ROUNDS,
+    token:JSON_SECRET_TOKEN,
 };

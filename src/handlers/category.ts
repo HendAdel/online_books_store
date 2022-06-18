@@ -4,11 +4,8 @@ import { category, categoryModel } from "../models/category";
 const categoryM = new categoryModel();
 
 const create = async (req: Request, res: Response) => {
-    try {
-        const categoryT: category = {
-            name: req.body.name
-        }
-        const newcategory = await categoryM.create(categoryT);
+    try {        
+        const newcategory = await categoryM.create(req.body);
         res.json(newcategory);
     }
     catch (error) {
@@ -23,17 +20,13 @@ const index = async (_req: Request, res: Response) => {
 }
 
 const show = async (req: Request, res: Response) => {
-    const category = await categoryM.showById(req.body.id);
+    const category = await categoryM.showById(req.params.id);
     res.json(category);
 }
 
 const edit = async (req: Request, res: Response) => {
-    try {
-        const categoryT: category = {
-            id: req.body.id,
-            name: req.body.name
-        }
-        const updatedcategory = await categoryM.updateById(categoryT);
+    try {        
+        const updatedcategory = await categoryM.updateById( req.body);
         res.json(updatedcategory);
     }
     catch (error) {

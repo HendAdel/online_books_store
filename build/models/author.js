@@ -71,21 +71,27 @@ var authorModel = /** @class */ (function () {
     // create new author
     authorModel.prototype.create = function (a) {
         return __awaiter(this, void 0, void 0, function () {
-            var connection, sql, result, error_1;
+            var conn, sql, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        console.log('test create author model');
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
-                        connection = _a.sent();
+                        conn = _a.sent();
+                        console.log('open connection');
                         sql = "Insert into authors (name) values ($1) returning id, name";
-                        return [4 /*yield*/, connection.query(sql, [
+                        console.log('qurey string');
+                        return [4 /*yield*/, conn.query(sql, [
                                 a.name
                             ])];
                     case 2:
                         result = _a.sent();
-                        connection.release();
+                        console.log('execute the query');
+                        conn.release();
+                        console.log('release connection');
+                        console.log(result.rows[0]);
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         error_1 = _a.sent();
@@ -126,18 +132,22 @@ var authorModel = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        console.log('test update author model');
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
+                        console.log('open connection');
                         sql = "Update authors set name = $2 Where id = ($1) returning id, name";
+                        console.log('qurey string');
                         return [4 /*yield*/, conn.query(sql, [a.id, a.name])];
                     case 2:
                         result = _a.sent();
+                        console.log('execute the query');
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_3 = _a.sent();
-                        throw new Error("cannot update the author ".concat(err_3));
+                        throw new Error("Cannot update the author ".concat(err_3));
                     case 4: return [2 /*return*/];
                 }
             });
@@ -150,13 +160,17 @@ var authorModel = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        console.log('test update author model');
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
+                        console.log('open connection');
                         sql = 'Delete from authors Where id = ($1) returning id, name';
+                        console.log('qurey string');
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
+                        console.log('execute the query');
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
