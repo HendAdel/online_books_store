@@ -1,9 +1,11 @@
 import express, { Request, Response } from "express";
 import { user, userModel } from "../models/user";
 import { Router } from "express";
+import Jwt from "jsonwebtoken";
+import config from "../config";
 
 const routes = Router();
-
+// const jwt = 
 const userM = new userModel();
 
 const create = async (req: Request, res: Response) => {
@@ -64,6 +66,34 @@ const remove = async (req: Request, res: Response) => {
 
 }
 
+const login = async (req: Request, res: Response) => {
+    try {
+        console.log("Test login handler"); 
+        const user = await userM.login_authenticate(req.body.email, req.body.u_password);
+        console.log("Test login handler get user" + user); 
+        if(user){
+            const token = Jwt.sign({user}, config.token as unknown as string);
+        console.log("Test login handler make token: " + token); 
+         return res.json({
+            status:'Success',
+            data: { ...user, token },
+            message: 'You signed in successfully.'
+        })
+        }        
+        if(!user){
+            return res.status(401).json({
+                status:'Error',
+                message: 'User name or password not correct, please try again!'
+            })
+        }
+       
+    } catch (error) {
+        res.status(400);
+        res.json(error);
+    }
+
+}
+
 // routes.route('/').post(create);
 // routes.route('/users').get(index);
 
@@ -73,6 +103,7 @@ const usersRoutes = (app: express.Application) => {
     app.get('/users/:id', show);
     app.put('/users/:id', edit);
     app.delete('/users/:id', remove);
+    app.post('/users/login', login);
 }
 
 export default usersRoutes; //routes;

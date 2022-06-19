@@ -13,17 +13,28 @@ export type user = {
 
 export class userModel {
 
-    async login_authenticate(u_name: string, u_password: string): Promise<user | null> {
+    async login_authenticate(email: string, u_password: string): Promise<user | null> {
 
         try {
+            console.log("Test login model by email: " + email);
             const conn = await db.connect();
-            const sql = `Select u_password from users Where u_name = ($1)`;
-            const result = await conn.query(sql, [u_name]);
+            console.log("Test login connection open");
+            const sql = `Select u_password from users Where email = ($1)`;            
+            console.log("Test login sql: " + sql);
+            const result = await conn.query(sql, [email]);
+            console.log("Test login result: " + result.rows);
             if(result.rows.length != 0){
-                const hashedPassword = result.rows[0];
+                console.log("Test login result.rows has length ");
+                const hashedPassword = result.rows[0].u_password;
+                console.log("Test login hashedPassword: " + hashedPassword as string);
                 const is_validPassword = bcrypt.compareSync(u_password + config.pepper, hashedPassword);
+                console.log("Test login is_validPassword: " + is_validPassword);
                 if(is_validPassword){
-                    const user_object = await conn.query(`Select id, u_name, email, u_password from users Where u_name = ($1)`, [u_name]);
+                    console.log("Test login Is valid password" );
+                    const user_object = await conn.query(`Select id, u_name, email, u_password from users Where email = ($1)`, [email]);
+                    console.log("Test login result: " + user_object);
+                    conn.release();
+                    return user_object.rows[0];
                 }
             }
             conn.release();
