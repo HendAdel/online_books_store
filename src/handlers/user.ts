@@ -3,6 +3,7 @@ import { user, userModel } from "../models/user";
 import { Router } from "express";
 import Jwt from "jsonwebtoken";
 import config from "../config";
+import authentication from "../middleware/authentication.middleware";
 
 const routes = Router();
 // const jwt = 
@@ -99,10 +100,10 @@ const login = async (req: Request, res: Response) => {
 
 const usersRoutes = (app: express.Application) => {
     app.post('/users', create);
-    app.get('/users', index);
-    app.get('/users/:id', show);
-    app.put('/users/:id', edit);
-    app.delete('/users/:id', remove);
+    app.get('/users', authentication, index);
+    app.get('/users/:id', authentication, show);
+    app.put('/users/:id', authentication, edit);
+    app.delete('/users/:id', authentication, remove);
     app.post('/users/login', login);
 }
 

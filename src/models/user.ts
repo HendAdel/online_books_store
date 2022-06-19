@@ -9,9 +9,13 @@ export type user = {
     u_password: string;
 }
 
-
+const hashPassword = (password: string) => {
+    const hash = bcrypt.hashSync(password + config.pepper, parseInt(config.salt as string));
+    return hash;
+}
 
 export class userModel {
+
 
     async login_authenticate(email: string, u_password: string): Promise<user | null> {
 
@@ -19,18 +23,18 @@ export class userModel {
             console.log("Test login model by email: " + email);
             const conn = await db.connect();
             console.log("Test login connection open");
-            const sql = `Select u_password from users Where email = ($1)`;            
+            const sql = `Select u_password from users Where email = ($1)`;
             console.log("Test login sql: " + sql);
             const result = await conn.query(sql, [email]);
             console.log("Test login result: " + result.rows);
-            if(result.rows.length != 0){
+            if (result.rows.length != 0) {
                 console.log("Test login result.rows has length ");
                 const hashedPassword = result.rows[0].u_password;
                 console.log("Test login hashedPassword: " + hashedPassword as string);
                 const is_validPassword = bcrypt.compareSync(u_password + config.pepper, hashedPassword);
                 console.log("Test login is_validPassword: " + is_validPassword);
-                if(is_validPassword){
-                    console.log("Test login Is valid password" );
+                if (is_validPassword) {
+                    console.log("Test login Is valid password");
                     const user_object = await conn.query(`Select id, u_name, email, u_password from users Where email = ($1)`, [email]);
                     console.log("Test login result: " + user_object);
                     conn.release();
@@ -67,7 +71,7 @@ export class userModel {
             const conn = await db.connect();
             const sql = `Insert into users (u_name, email, u_password) 
         values($1, $2, $3) returning id, u_name, email, u_password`;
-            const hash = bcrypt.hashSync(u.u_password + config.pepper, parseInt(config.salt as string));
+            const hash = hashPassword(u.u_password);
             const result = await conn.query(sql, [u.u_name, u.email, hash]);
             conn.release();
             return result.rows[0];
@@ -101,8 +105,9 @@ export class userModel {
             const conn = await db.connect();
             const sql = `Update users set u_name = $1, email = $2, u_password = $3 Where id = ($4) 
         returning id, u_name, email, u_password`;
-        console.log("Test update user by id sql: " + sql);
-            const result = await conn.query(sql, [u.u_name, u.email, u.u_password, u.id]);
+            console.log("Test update user by id sql: " + sql);
+            const hash = hashPassword(u.u_password);
+            const result = await conn.query(sql, [u.u_name, u.email, hash, u.id]);
             console.log("Test update by id result: " + result);
             conn.release();
             return result.rows[0];

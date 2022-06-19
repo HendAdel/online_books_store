@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { book, bookModel } from "../models/book";
+import authentication from "../middleware/authentication.middleware";
 
 const bookM = new bookModel();
 
@@ -72,11 +73,11 @@ const remove = async (req: Request, res: Response) => {
 }
 
 const booksRoutes = (app: express.Application) => {
-    app.post('/books', create);
+    app.post('/books', authentication, create);
     app.get('/books', index);
     app.get('/books/:id', show);
     app.put('/books/:id', edit);
-    app.delete('/books/:id', remove);
+    app.delete('/books/:id', authentication, remove);
 }
 
 export default booksRoutes;
