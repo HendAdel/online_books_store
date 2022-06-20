@@ -39,17 +39,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var order_1 = require("../models/order");
 var orderM = new order_1.orderModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderT, neworder, error_1;
+    var neworder, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                orderT = {
-                    o_date: req.body.date,
-                    o_total: req.body.total,
-                    user_id: req.body.user
-                };
-                return [4 /*yield*/, orderM.create(orderT)];
+                return [4 /*yield*/, orderM.create(req.body)];
             case 1:
                 neworder = _a.sent();
                 res.json(neworder);
@@ -79,7 +74,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     var order;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, orderM.showById(req.body.id)];
+            case 0: return [4 /*yield*/, orderM.showById(req.params.id)];
             case 1:
                 order = _a.sent();
                 res.json(order);
@@ -88,18 +83,12 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var orderT, updatedorder, error_2;
+    var updatedorder, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                orderT = {
-                    id: req.body.id,
-                    o_date: req.body.date,
-                    o_total: req.body.total,
-                    user_id: req.body.user
-                };
-                return [4 /*yield*/, orderM.updateById(orderT)];
+                return [4 /*yield*/, orderM.updateById(req.body)];
             case 1:
                 updatedorder = _a.sent();
                 res.json(updatedorder);

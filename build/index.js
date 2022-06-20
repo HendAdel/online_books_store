@@ -24,6 +24,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var morgan_1 = __importDefault(require("morgan"));
+var helmet_1 = __importDefault(require("helmet"));
+var express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 var dotenv = __importStar(require("dotenv"));
 var author_1 = __importDefault(require("./handlers/author"));
 var category_1 = __importDefault(require("./handlers/category"));
@@ -31,29 +33,24 @@ var publisher_1 = __importDefault(require("./handlers/publisher"));
 var user_1 = __importDefault(require("./handlers/user"));
 var book_1 = __importDefault(require("./handlers/book"));
 var order_1 = __importDefault(require("./handlers/order"));
-var database_1 = __importDefault(require("./database"));
 dotenv.config();
 var PORT = process.env.PORT || 3000;
 // create an instance server
 var app = (0, express_1.default)();
 // HTTP request logger middleware
 app.use((0, morgan_1.default)('short'));
+app.use((0, helmet_1.default)());
+app.use((0, express_rate_limit_1.default)({
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: "To many requests from this API, Please try again later!",
+}));
 app.use(express_1.default.json());
 // add routing for / path
 app.get('/', function (req, res) {
     console.log("user routes in index page");
-    database_1.default.connect().then(function (client) {
-        return client
-            .query('SELECT NOW()')
-            .then(function (res) {
-            client.release();
-            console.log(res.rows);
-        })
-            .catch(function (err) {
-            client.release();
-            console.log(err.stack);
-        });
-    });
     res.json({
         message: 'Hello World 🌍'
     });

@@ -112,9 +112,11 @@ var authorModel = /** @class */ (function () {
                     case 1:
                         conn = _a.sent();
                         sql = "Select id, name from authors Where id = ($1)";
+                        console.log("The showById query: " + sql);
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
+                        console.log("The showById result: " + result);
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:

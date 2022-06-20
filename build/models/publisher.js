@@ -126,11 +126,15 @@ var publisherModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "Update publishers set p_name = $1, p_address = $2, phone = $3 Where id = ($4)\n         returning id, title, p_address, phone";
-                        return [4 /*yield*/, conn.query(sql, [p.id, p.p_name, p.p_address, p.phone])];
+                        console.log("update model conn open ");
+                        sql = "Update publishers set p_name = $1, p_address = $2, phone = $3 Where id = ($4)\n         returning id, p_name, p_address, phone";
+                        console.log("update model sql statment: " + sql);
+                        return [4 /*yield*/, conn.query(sql, [p.p_name, p.p_address, p.phone, p.id])];
                     case 2:
                         result = _a.sent();
+                        console.log("update model result: " + result);
                         conn.release();
+                        console.log("update model conn release ");
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_4 = _a.sent();
@@ -150,7 +154,7 @@ var publisherModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'Delete from publishers Where id = ($1)';
+                        sql = 'Delete from publishers Where id = ($1) returning id, p_name, p_address, phone';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();

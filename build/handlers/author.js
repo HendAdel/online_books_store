@@ -86,8 +86,8 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                if (!req.query.id) return [3 /*break*/, 2];
-                return [4 /*yield*/, authorM.showById(req.body.id)];
+                if (!req.params.id) return [3 /*break*/, 2];
+                return [4 /*yield*/, authorM.showById(req.params.id)];
             case 1:
                 author = _a.sent();
                 res.json(author);
@@ -97,16 +97,12 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var authorT, updatedAuthor, error_3;
+    var updatedAuthor, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 console.log('edit handler');
-                authorT = {
-                    id: req.body.id,
-                    name: req.body.name
-                };
                 return [4 /*yield*/, authorM.updateById(req.body)];
             case 1:
                 updatedAuthor = _a.sent();

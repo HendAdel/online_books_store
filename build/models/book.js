@@ -150,14 +150,19 @@ var bookModel = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        console.log('test update book model');
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'Delete from books Where id = ($1)';
+                        console.log('open connection');
+                        sql = "Delete from books Where id = ($1) returning id, title, author_id, category_id, \n        publisher_id, published_year, pages, price, isbn, in_stock";
+                        console.log('qurey string');
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
+                        console.log('execute the query');
                         conn.release();
+                        console.log("The deleted ID: " + result.rows[0].id);
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_5 = _a.sent();

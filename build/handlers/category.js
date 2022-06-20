@@ -39,15 +39,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var category_1 = require("../models/category");
 var categoryM = new category_1.categoryModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var categoryT, newcategory, error_1;
+    var newcategory, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                categoryT = {
-                    name: req.body.name
-                };
-                return [4 /*yield*/, categoryM.create(categoryT)];
+                return [4 /*yield*/, categoryM.create(req.body)];
             case 1:
                 newcategory = _a.sent();
                 res.json(newcategory);
@@ -77,7 +74,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     var category;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, categoryM.showById(req.body.id)];
+            case 0: return [4 /*yield*/, categoryM.showById(req.params.id)];
             case 1:
                 category = _a.sent();
                 res.json(category);
@@ -86,16 +83,12 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var categoryT, updatedcategory, error_2;
+    var updatedcategory, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                categoryT = {
-                    id: req.body.id,
-                    name: req.body.name
-                };
-                return [4 /*yield*/, categoryM.updateById(categoryT)];
+                return [4 /*yield*/, categoryM.updateById(req.body)];
             case 1:
                 updatedcategory = _a.sent();
                 res.json(updatedcategory);

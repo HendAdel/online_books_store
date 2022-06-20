@@ -39,17 +39,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var publisher_1 = require("../models/publisher");
 var publisherM = new publisher_1.publisherModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var publisherT, newpublisher, error_1;
+    var newpublisher, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                publisherT = {
-                    p_name: req.body.p_name,
-                    p_address: req.body.p_address,
-                    phone: req.body.phone
-                };
-                return [4 /*yield*/, publisherM.create(publisherT)];
+                return [4 /*yield*/, publisherM.create(req.body)];
             case 1:
                 newpublisher = _a.sent();
                 res.json(newpublisher);
@@ -79,29 +74,28 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     var publisher;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, publisherM.showById(req.body.id)];
+            case 0:
+                if (!req.params.id) return [3 /*break*/, 2];
+                return [4 /*yield*/, publisherM.showById(req.params.id)];
             case 1:
                 publisher = _a.sent();
                 res.json(publisher);
-                return [2 /*return*/];
+                _a.label = 2;
+            case 2: return [2 /*return*/];
         }
     });
 }); };
 var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var publisherT, updatedpublisher, error_2;
+    var updatedpublisher, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                publisherT = {
-                    id: req.body.id,
-                    p_name: req.body.p_name,
-                    p_address: req.body.p_address,
-                    phone: req.body.phone
-                };
-                return [4 /*yield*/, publisherM.updateById(publisherT)];
+                console.log("update handler" + req.body.p_name + " " + req.body.p_address + " " + req.body.phone + " " + req.body.id);
+                return [4 /*yield*/, publisherM.updateById(req.body)];
             case 1:
                 updatedpublisher = _a.sent();
+                console.log("update handler req body: " + updatedpublisher);
                 res.json(updatedpublisher);
                 return [3 /*break*/, 3];
             case 2:

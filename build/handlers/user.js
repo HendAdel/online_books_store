@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,27 +46,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = require("../models/user");
 var express_1 = require("express");
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var config_1 = __importDefault(require("../config"));
+var authentication_middleware_1 = __importDefault(require("../middleware/authentication.middleware"));
 var routes = (0, express_1.Router)();
+// const jwt = 
 var userM = new user_1.userModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userT, newuser, error_1;
+    var newuser, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                userT = {
-                    u_name: req.body.name,
-                    email: req.body.email,
-                    u_password: req.body.password
-                };
-                return [4 /*yield*/, userM.create(userT)];
+                return [4 /*yield*/, userM.create(req.body)];
             case 1:
                 newuser = _a.sent();
-                // res.json(newuser);
-                res.send('this is the user create route');
+                res.json({
+                    status: "success",
+                    data: __assign({}, newuser),
+                    message: "User created successfully"
+                });
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
@@ -70,9 +86,13 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
     var users;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, userM.index()];
+            case 0:
+                console.log("Test show all users handler");
+                return [4 /*yield*/, userM.index()];
             case 1:
                 users = _a.sent();
+                console.log("Test show all users handler after calling index method");
+                console.log("Test show all users handler result" + users);
                 // res.send('this is the user index route');
                 res.json(users);
                 return [2 /*return*/];
@@ -80,32 +100,33 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var show = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var user;
+    var oneUser;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, userM.showById(req.body.id)];
+            case 0:
+                console.log("Test show by id handler");
+                return [4 /*yield*/, userM.showById(req.params.id)];
             case 1:
-                user = _a.sent();
-                res.json(user);
+                oneUser = _a.sent();
+                console.log("Test show by id after calling model method");
+                console.log("Test show by id user: " + oneUser);
+                res.json(oneUser);
                 return [2 /*return*/];
         }
     });
 }); };
 var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var userT, updateduser, error_2;
+    var updateduser, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                userT = {
-                    id: req.body.id,
-                    u_name: req.body.name,
-                    email: req.body.email,
-                    u_password: req.body.password
-                };
-                return [4 /*yield*/, userM.updateById(userT)];
+                console.log("Test Update by id handler");
+                return [4 /*yield*/, userM.updateById(req.body)];
             case 1:
                 updateduser = _a.sent();
+                console.log("Test update H by id after calling model method");
+                console.log("Test update H by id user: " + updateduser);
                 res.json(updateduser);
                 return [3 /*break*/, 3];
             case 2:
@@ -137,13 +158,50 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+var login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, token, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                console.log("Test login handler");
+                return [4 /*yield*/, userM.login_authenticate(req.body.email, req.body.u_password)];
+            case 1:
+                user = _a.sent();
+                console.log("Test login handler get user" + user);
+                if (user) {
+                    token = jsonwebtoken_1.default.sign({ user: user }, config_1.default.token);
+                    console.log("Test login handler make token: " + token);
+                    return [2 /*return*/, res.json({
+                            status: 'Success',
+                            data: __assign(__assign({}, user), { token: token }),
+                            message: 'You signed in successfully.'
+                        })];
+                }
+                if (!user) {
+                    return [2 /*return*/, res.status(401).json({
+                            status: 'Error',
+                            message: 'User name or password not correct, please try again!'
+                        })];
+                }
+                return [3 /*break*/, 3];
+            case 2:
+                error_4 = _a.sent();
+                res.status(400);
+                res.json(error_4);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 // routes.route('/').post(create);
 // routes.route('/users').get(index);
 var usersRoutes = function (app) {
     app.post('/users', create);
-    app.get('/users', index);
-    app.get('/users/:id', show);
-    app.put('/users/:id', edit);
-    app.delete('/users/:id', remove);
+    app.get('/users', authentication_middleware_1.default, index);
+    app.get('/users/:id', authentication_middleware_1.default, show);
+    app.put('/users/:id', authentication_middleware_1.default, edit);
+    app.delete('/users/:id', authentication_middleware_1.default, remove);
+    app.post('/users/login', login);
 };
 exports.default = usersRoutes; //routes;

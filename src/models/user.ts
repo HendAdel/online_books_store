@@ -104,7 +104,7 @@ export class userModel {
             console.log("Test update user model by id ");
             const conn = await db.connect();
             const sql = `Update users set u_name = $1, email = $2, u_password = $3 Where id = ($4) 
-        returning id, u_name, email, u_password`;
+        returning id, u_name, email`;
             console.log("Test update user by id sql: " + sql);
             const hash = hashPassword(u.u_password);
             const result = await conn.query(sql, [u.u_name, u.email, hash, u.id]);

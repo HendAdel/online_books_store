@@ -43,31 +43,45 @@ exports.userModel = void 0;
 var database_1 = __importDefault(require("../database"));
 var bcrypt_1 = __importDefault(require("bcrypt"));
 var config_1 = __importDefault(require("../config"));
+var hashPassword = function (password) {
+    var hash = bcrypt_1.default.hashSync(password + config_1.default.pepper, parseInt(config_1.default.salt));
+    return hash;
+};
 var userModel = /** @class */ (function () {
     function userModel() {
     }
-    userModel.prototype.login_authenticate = function (u_name, u_password) {
+    userModel.prototype.login_authenticate = function (email, u_password) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, hashedPassword, is_validPassword, user_object, err_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 5, , 6]);
+                        console.log("Test login model by email: " + email);
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "Select u_password from users Where u_name = ($1)";
-                        return [4 /*yield*/, conn.query(sql, [u_name])];
+                        console.log("Test login connection open");
+                        sql = "Select u_password from users Where email = ($1)";
+                        console.log("Test login sql: " + sql);
+                        return [4 /*yield*/, conn.query(sql, [email])];
                     case 2:
                         result = _a.sent();
+                        console.log("Test login result: " + result.rows);
                         if (!(result.rows.length != 0)) return [3 /*break*/, 4];
-                        hashedPassword = result.rows[0];
+                        console.log("Test login result.rows has length ");
+                        hashedPassword = result.rows[0].u_password;
+                        console.log("Test login hashedPassword: " + hashedPassword);
                         is_validPassword = bcrypt_1.default.compareSync(u_password + config_1.default.pepper, hashedPassword);
+                        console.log("Test login is_validPassword: " + is_validPassword);
                         if (!is_validPassword) return [3 /*break*/, 4];
-                        return [4 /*yield*/, conn.query("Select id, u_name, email, u_password from users Where u_name = ($1)", [u_name])];
+                        console.log("Test login Is valid password");
+                        return [4 /*yield*/, conn.query("Select id, u_name, email, u_password from users Where email = ($1)", [email])];
                     case 3:
                         user_object = _a.sent();
-                        _a.label = 4;
+                        console.log("Test login result: " + user_object);
+                        conn.release();
+                        return [2 /*return*/, user_object.rows[0]];
                     case 4:
                         conn.release();
                         return [2 /*return*/, null];
@@ -86,13 +100,17 @@ var userModel = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        console.log("Test show all users");
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
+                        console.log("Test show all users connection open");
                         sql = "select id, u_name, email, u_password from users";
+                        console.log("Test show all users sql: " + sql);
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         result = _a.sent();
+                        console.log("Test show all users result: " + result.rows);
                         conn.release();
                         return [2 /*return*/, result.rows];
                     case 3:
@@ -114,7 +132,7 @@ var userModel = /** @class */ (function () {
                     case 1:
                         conn = _a.sent();
                         sql = "Insert into users (u_name, email, u_password) \n        values($1, $2, $3) returning id, u_name, email, u_password";
-                        hash = bcrypt_1.default.hashSync(u.u_password + config_1.default.pepper, parseInt(config_1.default.salt));
+                        hash = hashPassword(u.u_password);
                         return [4 /*yield*/, conn.query(sql, [u.u_name, u.email, hash])];
                     case 2:
                         result = _a.sent();
@@ -135,14 +153,19 @@ var userModel = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        console.log("Test show by id model");
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
+                        console.log("Test show by id conn open");
                         sql = "Select id, u_name, email, u_password from users Where id = ($1)";
+                        console.log("Test show by id sql: " + sql);
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();
+                        console.log("Test show by id result: " + result);
                         conn.release();
+                        console.log("Test show by id after release conn");
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_4 = _a.sent();
@@ -154,18 +177,22 @@ var userModel = /** @class */ (function () {
     };
     userModel.prototype.updateById = function (u) {
         return __awaiter(this, void 0, void 0, function () {
-            var conn, sql, result, err_5;
+            var conn, sql, hash, result, err_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
+                        console.log("Test update user model by id ");
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "Update users set u_name = $1, email = $2, u_password = $3 Where id = ($4) \n        returning id, u_name, email, u_password";
-                        return [4 /*yield*/, conn.query(sql, [u.id, u.u_name, u.email, u.u_password])];
+                        sql = "Update users set u_name = $1, email = $2, u_password = $3 Where id = ($4) \n        returning id, u_name, email";
+                        console.log("Test update user by id sql: " + sql);
+                        hash = hashPassword(u.u_password);
+                        return [4 /*yield*/, conn.query(sql, [u.u_name, u.email, hash, u.id])];
                     case 2:
                         result = _a.sent();
+                        console.log("Test update by id result: " + result);
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
@@ -186,7 +213,7 @@ var userModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'Delete from users Where id = ($1)';
+                        sql = 'Delete from users Where id = ($1) returning id, u_name, email';
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();

@@ -35,27 +35,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var book_1 = require("../models/book");
+var authentication_middleware_1 = __importDefault(require("../middleware/authentication.middleware"));
 var bookM = new book_1.bookModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var bookT, newbook, error_1;
+    var newbook, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                bookT = {
-                    title: req.body.title,
-                    author_id: req.body.author,
-                    category_id: req.body.category,
-                    publisher_id: req.body.publisher,
-                    published_year: req.body.published_year,
-                    pages: req.body.pages,
-                    price: req.body.price,
-                    isbn: req.body.isbn,
-                    in_stock: req.body.instock
-                };
-                return [4 /*yield*/, bookM.create(bookT)];
+                return [4 /*yield*/, bookM.create(req.body)];
             case 1:
                 newbook = _a.sent();
                 res.json(newbook);
@@ -85,33 +78,24 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
     var book;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, bookM.showById(req.body.id)];
+            case 0:
+                if (!req.params.id) return [3 /*break*/, 2];
+                return [4 /*yield*/, bookM.showById(req.params.id)];
             case 1:
                 book = _a.sent();
                 res.json(book);
-                return [2 /*return*/];
+                _a.label = 2;
+            case 2: return [2 /*return*/];
         }
     });
 }); };
 var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var bookT, updatedbook, error_2;
+    var updatedbook, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                bookT = {
-                    id: req.body.id,
-                    title: req.body.title,
-                    author_id: req.body.author,
-                    category_id: req.body.category,
-                    publisher_id: req.body.publisher,
-                    published_year: req.body.published_year,
-                    pages: req.body.pages,
-                    price: req.body.price,
-                    isbn: req.body.isbn,
-                    in_stock: req.body.instock
-                };
-                return [4 /*yield*/, bookM.updateById(bookT)];
+                return [4 /*yield*/, bookM.updateById(req.body)];
             case 1:
                 updatedbook = _a.sent();
                 res.json(updatedbook);
@@ -146,10 +130,10 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var booksRoutes = function (app) {
-    app.post('/books', create);
+    app.post('/books', authentication_middleware_1.default, create);
     app.get('/books', index);
     app.get('/books/:id', show);
     app.put('/books/:id', edit);
-    app.delete('/books/:id', remove);
+    app.delete('/books/:id', authentication_middleware_1.default, remove);
 };
 exports.default = booksRoutes;
