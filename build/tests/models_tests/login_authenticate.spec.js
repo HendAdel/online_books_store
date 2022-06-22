@@ -89,8 +89,8 @@ describe("User login authentication model test", function () {
                 case 0: return [4 /*yield*/, userM.login_authenticate(user.email, user.u_password)];
                 case 1:
                     result = _a.sent();
-                    expect(result === null || result === void 0 ? void 0 : result.u_name).toBe('Abd El-Rahman');
-                    expect(result === null || result === void 0 ? void 0 : result.email).toBe('test@bookstore.com');
+                    expect(result === null || result === void 0 ? void 0 : result.u_name).toBe(user.u_name);
+                    expect(result === null || result === void 0 ? void 0 : result.email).toBe(user.email);
                     return [2 /*return*/];
             }
         });

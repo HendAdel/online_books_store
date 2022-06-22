@@ -92,9 +92,9 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
             case 1:
                 users = _a.sent();
                 console.log("Test show all users handler after calling index method");
-                console.log("Test show all users handler result" + users);
+                console.log("Test show all users handler result first user emails: " + users[0].email);
                 // res.send('this is the user index route');
-                res.json(users);
+                res.json({ data: users });
                 return [2 /*return*/];
         }
     });
@@ -110,7 +110,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 oneUser = _a.sent();
                 console.log("Test show by id after calling model method");
                 console.log("Test show by id user: " + oneUser);
-                res.json(oneUser);
+                res.json({ data: oneUser });
                 return [2 /*return*/];
         }
     });
@@ -125,9 +125,9 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, userM.updateById(req.body)];
             case 1:
                 updateduser = _a.sent();
+                console.log("Test update H by id user email: " + updateduser.email);
                 console.log("Test update H by id after calling model method");
-                console.log("Test update H by id user: " + updateduser);
-                res.json(updateduser);
+                res.json({ data: updateduser });
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _a.sent();
@@ -147,7 +147,7 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, userM.deleteById(req.body.id)];
             case 1:
                 user = _a.sent();
-                res.json(user);
+                res.json({ data: user });
                 return [3 /*break*/, 3];
             case 2:
                 error_3 = _a.sent();

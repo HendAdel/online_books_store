@@ -110,7 +110,7 @@ var userModel = /** @class */ (function () {
                         return [4 /*yield*/, conn.query(sql)];
                     case 2:
                         result = _a.sent();
-                        console.log("Test show all users result: " + result.rows);
+                        console.log("Test show all users first u name: " + result.rows[0].u_name);
                         conn.release();
                         return [2 /*return*/, result.rows];
                     case 3:
@@ -192,7 +192,7 @@ var userModel = /** @class */ (function () {
                         return [4 /*yield*/, conn.query(sql, [u.u_name, u.email, hash, u.id])];
                     case 2:
                         result = _a.sent();
-                        console.log("Test update by id result: " + result);
+                        console.log("Test update by id result: " + result.rows[0].id);
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:

@@ -1,6 +1,5 @@
 import { user, userModel } from "../../models/user";
 import db from "../../database";
-// import { request } from "http";
 import supertest from "supertest";
 import app from "../../index";
 
@@ -77,11 +76,12 @@ describe("user endpoints CRUD methods test", () => {
     });
 
     it('Should List all users', async () => {
+        console.log(`Insex endpoint the token is: ${save_token}`);
         const result = await request
             .get('/users')
-            .set('Content-type', 'application/json')            
+            // .set('Content-type', 'application/json')            
         .set('Authorization', `Bearer ${save_token}`)
-        console.log("the login endpoint test result: " + result.body.data);
+        console.log("the login endpoint test result: " + result.body);
         expect(result.status).toBe(200);
         expect(result.body.data.length).toBeGreaterThan(0);
     });
@@ -104,15 +104,15 @@ describe("user endpoints CRUD methods test", () => {
             .set('Content-type', 'application/json')         
             .set('Authorization', `Bearer ${save_token}`)
             .send({
-                u_name: 'test_update', email: 'testU@bookstore.com',
-                u_password: '123654'
+                u_name: 'test_update', email: 'test@bookstore.com',
+                u_password: '123654', id: user.id
             })
         console.log("the login endpoint test result update user: " + result.body.data);
         expect(result.status).toBe(200);
         const { id, u_name, email } = result.body.data
         expect(id).toBe(user.id);
         expect(u_name).toBe('test_update');
-        expect(email).toBe('testU@bookstore.com');
+        expect(email).toBe('test@bookstore.com');
     });
 
     it('Should delete one user by Id', async () => {
@@ -120,12 +120,13 @@ describe("user endpoints CRUD methods test", () => {
             .delete(`/users/ ${user.id}`)
             .set('Content-type', 'application/json')         
             .set('Authorization', `Bearer ${save_token}`)
+            .send({ id: user.id})
         console.log("the login endpoint test result delete user: " + result.body.data);
         expect(result.status).toBe(200);
         const { id, u_name, email } = result.body.data
         expect(id).toBe(user.id);
         expect(u_name).toBe('test_update');
-        expect(email).toBe('testU@bookstore.com');
+        expect(email).toBe('test@bookstore.com');
     });
 
    

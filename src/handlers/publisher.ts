@@ -7,7 +7,7 @@ const create = async (req: Request, res: Response) => {
     try {
         
         const newpublisher = await publisherM.create(req.body);
-        res.json(newpublisher);
+        res.json({data: newpublisher});
     }
     catch (error) {
         res.status(400);
@@ -17,13 +17,13 @@ const create = async (req: Request, res: Response) => {
 
 const index = async (_req: Request, res: Response) => {
     const publishers = await publisherM.index();
-    res.json(publishers);
+    res.json({data: publishers});
 }
 
 const show = async (req: Request, res: Response) => {
     if (req.params.id) {
     const publisher = await publisherM.showById(req.params.id);
-    res.json(publisher);
+    res.json({data: publisher});
 }
 }
 
@@ -32,7 +32,7 @@ const edit = async (req: Request, res: Response) => {
         console.log("update handler" + req.body.p_name + " " + req.body.p_address + " " + req.body.phone + " " + req.body.id);
         const updatedpublisher = await publisherM.updateById(req.body);
         console.log("update handler req body: " + updatedpublisher);
-        res.json(updatedpublisher);
+        res.json({data: updatedpublisher});
     }
     catch (error) {
         res.status(400);
@@ -43,7 +43,7 @@ const edit = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
     try {
         const publisher = await publisherM.deleteById(req.body.id);
-        res.json(publisher);
+        res.json({data: publisher});
     } catch (error) {
         res.status(400);
         res.json(error);

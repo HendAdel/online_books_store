@@ -69,6 +69,9 @@ Set up the Express handlers to route incoming requests to the correct model meth
     app.put('/users/:id', edit); Update user by Id Put method(http://localhost:3000/users/id) 
     app.delete('/users/:id', remove); Delete user by Id Delete method(http://localhost:3000/users/id)
 
+##### Orders Endpoints:
+    app.post('/orders/:id/books', create_o_d); Create order details post method(http://localhost:3000/orders/3/books)
+
 ### 5. JWTs
 
 Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.

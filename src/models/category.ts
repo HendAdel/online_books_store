@@ -62,7 +62,7 @@ export class categoryModel {
         }
     }
 
-    async deleteById(id: string): Promise<category> {
+    async deleteById(id: string): Promise<category[]> {
         try {
         const conn = await db.connect();
         const sql = 'Delete from categories Where id = ($1) returning id, name';

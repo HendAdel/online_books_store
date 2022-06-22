@@ -18,7 +18,7 @@ const create = async (req: Request, res: Response) => {
         //     in_stock: req.body.instock
         // }
         const newbook = await bookM.create(req.body);
-        res.json(newbook);
+        res.json({data: newbook});
     }
     catch (error) {
         res.status(400);
@@ -28,13 +28,13 @@ const create = async (req: Request, res: Response) => {
 
 const index = async (_req: Request, res: Response) => {
     const books = await bookM.index();
-    res.json(books);
+    res.json({data: books});
 }
 
 const show = async (req: Request, res: Response) => {
     if (req.params.id) {
     const book = await bookM.showById(req.params.id);
-    res.json(book);
+    res.json({data: book});
     }
 }
 
@@ -53,7 +53,7 @@ const edit = async (req: Request, res: Response) => {
         //     in_stock: req.body.instock
         // }
         const updatedbook = await bookM.updateById(req.body);
-        res.json(updatedbook);
+        res.json({data: updatedbook});
     }
     catch (error) {
         res.status(400);
@@ -64,7 +64,7 @@ const edit = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
     try {
         const book = await bookM.deleteById(req.body.id);
-        res.json(book);
+        res.json({data: book});
     } catch (error) {
         res.status(400);
         res.json(error);
@@ -72,12 +72,13 @@ const remove = async (req: Request, res: Response) => {
 
 }
 
+
 const booksRoutes = (app: express.Application) => {
-    app.post('/books', authentication, create);
+    app.post('/books', create);
     app.get('/books', index);
     app.get('/books/:id', show);
     app.put('/books/:id', edit);
-    app.delete('/books/:id', authentication, remove);
+    app.delete('/books/:id', remove);
 }
 
 export default booksRoutes;

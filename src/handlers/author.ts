@@ -9,7 +9,7 @@ const create = async (req: Request, res: Response) => {
         const newAuthor = await authorM.create(req.body);
         console.log('After calling create author method');
         // const newAuthor = await authorM.create(authorT);
-        res.json(newAuthor);
+        res.json({data: newAuthor});
     }
     catch (error) {
         res.status(400);
@@ -20,7 +20,7 @@ const create = async (req: Request, res: Response) => {
 const index = async (_req: Request, res: Response) => {
     try {
         const authors = await authorM.index();
-        res.json(authors);
+        res.json({data: authors});
     }
     catch (error) {
         res.status(400);
@@ -31,7 +31,7 @@ const index = async (_req: Request, res: Response) => {
 const show = async (req: Request, res: Response) => {
     if (req.params.id) {
         const author = await authorM.showById(req.params.id);
-        res.json(author);
+        res.json({data: author});
     }
 
 }
@@ -44,7 +44,7 @@ const edit = async (req: Request, res: Response) => {
         //     name: req.body.name
         // }
         const updatedAuthor = await authorM.updateById(req.body);
-        res.json(updatedAuthor);
+        res.json({data: updatedAuthor});
     }
     catch (error) {
         res.status(400);
@@ -55,7 +55,7 @@ const edit = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
     try {
         const author = await authorM.deleteById(req.body.id);
-        res.json(author);
+        res.json({data: author});
     } catch (error) {
         res.status(400);
         res.json(error);

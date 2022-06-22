@@ -126,7 +126,8 @@ var orderDetailsModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = 'Delete from orders_details Where id = ($1)';
+                        sql = 'Delete from orders_details Where order_id = ($1)';
+                        console.log('delete order H sql: ' + sql);
                         return [4 /*yield*/, conn.query(sql, [id])];
                     case 2:
                         result = _a.sent();

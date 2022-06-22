@@ -19,13 +19,13 @@ describe("user Model", ()=> {
 
     afterAll(async () => {
         const conn = await db.connect()
-        let sql = 'DELETE FROM books; \nALTER SEQUENCE books_id_seq RESTART WITH 1;';
-        await conn.query(sql);
-        sql = 'DELETE FROM orders_details; \nALTER SEQUENCE orders_details_id_seq RESTART WITH 1;';
-        await conn.query(sql);
-        sql = 'DELETE FROM orders; \nALTER SEQUENCE orders_id_seq RESTART WITH 1;';
-        await conn.query(sql);        
-        sql = 'DELETE FROM users; \nALTER SEQUENCE users_id_seq RESTART WITH 1;';
+        // let sql = 'DELETE FROM books; \nALTER SEQUENCE books_id_seq RESTART WITH 1;';
+        // await conn.query(sql);
+        // sql = 'DELETE FROM orders_details; \nALTER SEQUENCE orders_details_id_seq RESTART WITH 1;';
+        // await conn.query(sql);
+        // sql = 'DELETE FROM orders; \nALTER SEQUENCE orders_id_seq RESTART WITH 1;';
+        // await conn.query(sql);        
+        const sql = 'DELETE FROM users; \nALTER SEQUENCE users_id_seq RESTART WITH 1;';
         await conn.query(sql);        
         conn.release();
     });
@@ -66,16 +66,16 @@ describe("user Model", ()=> {
     it('updateById method should return one user with new data', async() => {
         const result = await userM.updateById({... user, 
         u_name: 'Abd El-Rahman Mostafa', 
-        email: 'a_mostafa@bookstore.com',
+        email: 'test_model@bookstore.com',
         id: 1});
         expect(result.id).toBe(1);
         expect(result.u_name).toBe('Abd El-Rahman Mostafa');
-        expect(result.email).toBe('a_mostafa@bookstore.com');      
+        expect(result.email).toBe('test_model@bookstore.com');      
         });    
   
     it('deleteById method should remove one user with the same id', async() => {
         userM.deleteById('1');
         const result = await userM.index();
-        expect(result).toEqual([]);
+        expect(result.length).toBeGreaterThan(0);
     });
 });

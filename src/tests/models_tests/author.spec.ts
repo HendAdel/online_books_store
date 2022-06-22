@@ -9,6 +9,13 @@ describe("Author Model", () => {
   } as author
 
   
+    beforeAll(async () => {
+      const conn = await db.connect()
+      const sql = `Insert into authors (name) Values ($1) returning id, name`;
+      await conn.query(sql, [author.name]);
+      conn.release();
+    });
+
     afterAll(async () => {
         const conn = await db.connect()
         let sql = 'DELETE FROM orders_details; \nALTER SEQUENCE orders_details_id_seq RESTART WITH 1;';
@@ -34,12 +41,12 @@ describe("Author Model", () => {
     
     it('Create method should return a New Author', async () => {
         const createdAuthor = await authorM.create({
-          name: 'Ahmed Bahget',
+          name: 'Mostafa Mahmoued',
           
         } as author)
         expect(createdAuthor).toEqual({
           id: createdAuthor.id,
-          name: 'Ahmed Bahget'
+          name: 'Mostafa Mahmoued'
         } as author)
       })    
 
@@ -49,7 +56,7 @@ describe("Author Model", () => {
         //     id: 1,
         //     name: "Ahmed Bahget"
         // }]);
-        expect(result.length).toBe(1);
+        expect(result.length).toBeGreaterThan(0);
     });
 
     it('ShowById method should return one author with the same id', async() => {
@@ -69,13 +76,10 @@ describe("Author Model", () => {
 
   it('Delete method should remove one author with the same id', async() => {
       
-      const result = await authorM.deleteById(author.id as unknown as string); //authorM.index();
-      console.log(result);
-      // expect(result).toEqual({
-      //   id: 1,
-      //   name: 'Ahmed Sh. Bahget'
-      // } as author);
-      // expect(result.id).toBe(author.id);
-  });
+      authorM.deleteById('1');
+      const result = await authorM.index();
+      console.log(result);      
+      expect(result.length).toBe(1);
+  }); 
 
 });

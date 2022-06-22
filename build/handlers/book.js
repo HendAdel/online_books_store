@@ -35,12 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var book_1 = require("../models/book");
-var authentication_middleware_1 = __importDefault(require("../middleware/authentication.middleware"));
 var bookM = new book_1.bookModel();
 var create = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var newbook, error_1;
@@ -51,7 +47,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, bookM.create(req.body)];
             case 1:
                 newbook = _a.sent();
-                res.json(newbook);
+                res.json({ data: newbook });
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
@@ -69,7 +65,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0: return [4 /*yield*/, bookM.index()];
             case 1:
                 books = _a.sent();
-                res.json(books);
+                res.json({ data: books });
                 return [2 /*return*/];
         }
     });
@@ -83,7 +79,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, bookM.showById(req.params.id)];
             case 1:
                 book = _a.sent();
-                res.json(book);
+                res.json({ data: book });
                 _a.label = 2;
             case 2: return [2 /*return*/];
         }
@@ -98,7 +94,7 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, bookM.updateById(req.body)];
             case 1:
                 updatedbook = _a.sent();
-                res.json(updatedbook);
+                res.json({ data: updatedbook });
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _a.sent();
@@ -118,7 +114,7 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, bookM.deleteById(req.body.id)];
             case 1:
                 book = _a.sent();
-                res.json(book);
+                res.json({ data: book });
                 return [3 /*break*/, 3];
             case 2:
                 error_3 = _a.sent();
@@ -130,10 +126,10 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
     });
 }); };
 var booksRoutes = function (app) {
-    app.post('/books', authentication_middleware_1.default, create);
+    app.post('/books', create);
     app.get('/books', index);
     app.get('/books/:id', show);
     app.put('/books/:id', edit);
-    app.delete('/books/:id', authentication_middleware_1.default, remove);
+    app.delete('/books/:id', remove);
 };
 exports.default = booksRoutes;

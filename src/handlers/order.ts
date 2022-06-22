@@ -11,7 +11,7 @@ const create = async (req: Request, res: Response) => {
         //     user_id: req.body.user
         // }
         const neworder = await orderM.create(req.body);
-        res.json(neworder);
+        res.json({data: neworder});
     }
     catch (error) {
         res.status(400);
@@ -21,12 +21,12 @@ const create = async (req: Request, res: Response) => {
 
 const index = async (_req: Request, res: Response) => {
     const orders = await orderM.index();
-    res.json(orders);
+    res.json({data: orders});
 }
 
 const show = async (req: Request, res: Response) => {
     const order = await orderM.showById(req.params.id);
-    res.json(order);
+    res.json({data: order});
 }
 
 const edit = async (req: Request, res: Response) => {
@@ -38,7 +38,7 @@ const edit = async (req: Request, res: Response) => {
         //     user_id: req.body.user
         // }
         const updatedorder = await orderM.updateById(req.body);
-        res.json(updatedorder);
+        res.json({data: updatedorder});
     }
     catch (error) {
         res.status(400);
@@ -48,13 +48,35 @@ const edit = async (req: Request, res: Response) => {
 
 const remove = async (req: Request, res: Response) => {
     try {
+        console.log('delete order H orderId: ' + req.body.id);
         const order = await orderM.deleteById(req.body.id);
-        res.json(order);
+        console.log('deleted order H object: ' + order);
+        res.json({data: order});
     } catch (error) {
         res.status(400);
         res.json(error);
     }
 
+}
+
+const create_o_d = async (req: Request, res: Response) => {
+
+    const orderId = parseInt(req.body.order_id);
+    console.log('order H orderId: ' + orderId);
+    
+    const count = req.body.b_count;
+    console.log('book count:' + count);
+    const bookId = req.body.book_id;
+    console.log('order H bookId' + bookId);
+    try {
+        const neworder = await orderM.create_o_d(orderId, count, bookId);
+        console.log('order details after calling insert method' + neworder);
+        res.json({data: neworder});
+    }
+    catch (error) {
+        res.status(400);
+        res.json(error);
+    }
 }
 
 const ordersRoutes = (app: express.Application) => {
@@ -63,6 +85,7 @@ const ordersRoutes = (app: express.Application) => {
     app.get('/orders/:id', show);
     app.put('/orders/:id', edit);
     app.delete('/orders/:id', remove);
+    app.post('/orders/:id/books', create_o_d);
 }
 
 export default ordersRoutes;

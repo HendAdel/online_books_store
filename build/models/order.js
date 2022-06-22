@@ -41,6 +41,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.orderModel = void 0;
 var database_1 = __importDefault(require("../database"));
+var order_details_1 = require("./order_details");
+var orderDetailsM = new order_details_1.orderDetailsModel();
 var orderModel = /** @class */ (function () {
     function orderModel() {
     }
@@ -140,7 +142,7 @@ var orderModel = /** @class */ (function () {
             });
         });
     };
-    orderModel.prototype.deleteById = function (id) {
+    orderModel.prototype.create_o_d = function (order_id, b_count, book_id) {
         return __awaiter(this, void 0, void 0, function () {
             var conn, sql, result, err_5;
             return __generator(this, function (_a) {
@@ -150,16 +152,49 @@ var orderModel = /** @class */ (function () {
                         return [4 /*yield*/, database_1.default.connect()];
                     case 1:
                         conn = _a.sent();
-                        sql = "Delete from orders Where id = ($1) returning id, o_date, o_total, user_id";
-                        return [4 /*yield*/, conn.query(sql, [id])];
+                        console.log('open connection to create_o_d');
+                        sql = "Insert into orders_details (order_id, b_count, book_id) \n            values( $1, $2, $3) returning id, order_id, b_count, book_id";
+                        console.log('sql statment: ' + sql);
+                        return [4 /*yield*/, conn.query(sql, [order_id, b_count, book_id])];
                     case 2:
                         result = _a.sent();
+                        console.log('execute the query, rowsCount:' + result.rowCount);
                         conn.release();
                         return [2 /*return*/, result.rows[0]];
                     case 3:
                         err_5 = _a.sent();
-                        throw new Error("cannot delete the order ".concat(err_5));
+                        throw new Error("cannot create the new order Details ".concat(err_5));
                     case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    orderModel.prototype.deleteById = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var conn, sql, result, err_6;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        return [4 /*yield*/, database_1.default.connect()];
+                    case 1:
+                        conn = _a.sent();
+                        console.log('delete orderD M orderId: ' + id);
+                        return [4 /*yield*/, orderDetailsM.deleteById(id)];
+                    case 2:
+                        _a.sent();
+                        sql = "Delete from orders Where id = ($1) returning id, o_date, o_total, user_id";
+                        console.log('delete order H sql: ' + sql);
+                        return [4 /*yield*/, conn.query(sql, [id])];
+                    case 3:
+                        result = _a.sent();
+                        console.log('deleted order H orderId: ' + result.rows[0].id);
+                        conn.release();
+                        return [2 /*return*/, result.rows[0]];
+                    case 4:
+                        err_6 = _a.sent();
+                        throw new Error("cannot delete the order ".concat(err_6));
+                    case 5: return [2 /*return*/];
                 }
             });
         });

@@ -47,7 +47,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, orderM.create(req.body)];
             case 1:
                 neworder = _a.sent();
-                res.json(neworder);
+                res.json({ data: neworder });
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
@@ -65,7 +65,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0: return [4 /*yield*/, orderM.index()];
             case 1:
                 orders = _a.sent();
-                res.json(orders);
+                res.json({ data: orders });
                 return [2 /*return*/];
         }
     });
@@ -77,7 +77,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
             case 0: return [4 /*yield*/, orderM.showById(req.params.id)];
             case 1:
                 order = _a.sent();
-                res.json(order);
+                res.json({ data: order });
                 return [2 /*return*/];
         }
     });
@@ -91,7 +91,7 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, orderM.updateById(req.body)];
             case 1:
                 updatedorder = _a.sent();
-                res.json(updatedorder);
+                res.json({ data: updatedorder });
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _a.sent();
@@ -108,10 +108,12 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
+                console.log('delete order H orderId: ' + req.body.id);
                 return [4 /*yield*/, orderM.deleteById(req.body.id)];
             case 1:
                 order = _a.sent();
-                res.json(order);
+                console.log('deleted order H object: ' + order);
+                res.json({ data: order });
                 return [3 /*break*/, 3];
             case 2:
                 error_3 = _a.sent();
@@ -122,11 +124,41 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
         }
     });
 }); };
+var create_o_d = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var orderId, count, bookId, neworder, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                orderId = parseInt(req.body.order_id);
+                console.log('order H orderId: ' + orderId);
+                count = req.body.b_count;
+                console.log('book count:' + count);
+                bookId = req.body.book_id;
+                console.log('order H bookId' + bookId);
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, orderM.create_o_d(orderId, count, bookId)];
+            case 2:
+                neworder = _a.sent();
+                console.log('order details after calling insert method' + neworder);
+                res.json({ data: neworder });
+                return [3 /*break*/, 4];
+            case 3:
+                error_4 = _a.sent();
+                res.status(400);
+                res.json(error_4);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
 var ordersRoutes = function (app) {
     app.post('/orders', create);
     app.get('/orders', index);
     app.get('/orders/:id', show);
     app.put('/orders/:id', edit);
     app.delete('/orders/:id', remove);
+    app.post('/orders/:id/books', create_o_d);
 };
 exports.default = ordersRoutes;

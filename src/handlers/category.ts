@@ -6,7 +6,7 @@ const categoryM = new categoryModel();
 const create = async (req: Request, res: Response) => {
     try {        
         const newcategory = await categoryM.create(req.body);
-        res.json(newcategory);
+        res.json({data: newcategory});
     }
     catch (error) {
         res.status(400);
@@ -16,18 +16,18 @@ const create = async (req: Request, res: Response) => {
 
 const index = async (_req: Request, res: Response) => {
     const categories = await categoryM.index();
-    res.json(categories);
+    res.json({data: categories});
 }
 
 const show = async (req: Request, res: Response) => {
     const category = await categoryM.showById(req.params.id);
-    res.json(category);
+    res.json({data: category});
 }
 
 const edit = async (req: Request, res: Response) => {
     try {        
         const updatedcategory = await categoryM.updateById( req.body);
-        res.json(updatedcategory);
+        res.json({data: updatedcategory});
     }
     catch (error) {
         res.status(400);
@@ -38,7 +38,7 @@ const edit = async (req: Request, res: Response) => {
 const remove = async (req: Request, res: Response) => {
     try {
         const category = await categoryM.deleteById(req.body.id);
-        res.json(category);
+        res.json({data: category});
     } catch (error) {
         res.status(400);
         res.json(error);

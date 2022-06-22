@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -51,27 +40,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var order_1 = require("../../models/order");
-var user_1 = require("../../models/user");
-var book_1 = require("../../models/book");
+var database_1 = __importDefault(require("../../database"));
+var supertest_1 = __importDefault(require("supertest"));
+var index_1 = __importDefault(require("../../index"));
 var category_1 = require("../../models/category");
 var author_1 = require("../../models/author");
 var publisher_1 = require("../../models/publisher");
-var database_1 = __importDefault(require("../../database"));
+var book_1 = require("../../models/book");
+var user_1 = require("../../models/user");
+var bookM = new book_1.bookModel();
 var category = new category_1.categoryModel();
 var author = new author_1.authorModel();
 var publisher = new publisher_1.publisherModel();
-var orderM = new order_1.orderModel();
 var user = new user_1.userModel();
-var book = new book_1.bookModel();
-describe("order Model", function () {
-    var order = {
-        id: 1,
-        o_date: new Date('1/1/2022'),
-        o_total: 100,
-        user_id: 1
-    };
+var book = {
+    title: 'ANbiaa Allah',
+    author_id: 1,
+    category_id: 1,
+    publisher_id: 1,
+    published_year: '1999',
+    pages: 200, price: 100,
+    isbn: '30009771481037',
+    in_stock: 6
+};
+var orderM = new order_1.orderModel();
+var request = (0, supertest_1.default)(index_1.default);
+var order = {
+    o_date: new Date('1/1/2022'),
+    o_total: 100,
+    user_id: 1
+};
+describe("order endpoints CRUD methods test", function () {
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var createdOrder;
+        var createdbook, createdorder;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, user.create({ u_name: 'Abd El-Rahman', email: 'aer@bookstore.com', u_password: '123654' })];
@@ -86,22 +87,14 @@ describe("order Model", function () {
                     return [4 /*yield*/, publisher.create({ p_name: 'El-Shroq', p_address: 'Cairo', phone: '0245698712' })];
                 case 4:
                     _a.sent();
-                    return [4 /*yield*/, book.create({
-                            title: 'ANbiaa Allah',
-                            author_id: 1,
-                            category_id: 1,
-                            publisher_id: 1,
-                            published_year: '1999',
-                            pages: 200, price: 100,
-                            isbn: '12304567891024',
-                            in_stock: 6
-                        })];
+                    return [4 /*yield*/, bookM.create(book)];
                 case 5:
-                    _a.sent();
+                    createdbook = _a.sent();
+                    book.id = createdbook.id;
                     return [4 /*yield*/, orderM.create(order)];
                 case 6:
-                    createdOrder = _a.sent();
-                    order.id = createdOrder.id;
+                    createdorder = _a.sent();
+                    order.id = createdorder.id;
                     return [2 /*return*/];
             }
         });
@@ -146,106 +139,124 @@ describe("order Model", function () {
             }
         });
     }); });
-    it('Should have an index method', function () {
-        expect(orderM.index).toBeDefined();
-    });
-    it('Should have an create method', function () {
-        expect(orderM.create).toBeDefined();
-    });
-    it('Should have an showById method', function () {
-        expect(orderM.showById).toBeDefined();
-    });
-    it('Should have an updateById method', function () {
-        expect(orderM.updateById).toBeDefined();
-    });
-    it('Should have an deleteById method', function () {
-        expect(orderM.deleteById).toBeDefined();
-    });
-    it('create method should add new order', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, orderM.create({
+    it('Should create a new order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, o_date, o_total, user_id;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .post('/orders')
+                        .set('Content-type', 'application/json')
+                        .send({
                         o_date: new Date('6/6/2022'),
                         o_total: 200,
                         user_id: 1
                     })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toBe(2);
-                    expect(result.o_total).toBe(200);
-                    expect(result.user_id).toBe(1);
+                    result = _b.sent();
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, o_date = _a.o_date, o_total = _a.o_total, user_id = _a.user_id;
+                    expect(id).toBe(2);
+                    expect(o_total).toBe(200);
+                    expect(user_id).toBe(1);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('Index method should return a list of orders', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('Should List all orders', function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, orderM.index()];
+                case 0: return [4 /*yield*/, request
+                        .get('/orders')
+                        .set('Content-type', 'application/json')];
                 case 1:
                     result = _a.sent();
-                    expect(result.length).toBeGreaterThan(0);
+                    console.log("the order endpoint test result: " + result.body);
+                    expect(result.status).toBe(200);
+                    expect(result.body.data.length).toBeGreaterThan(0);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('showById method should return one order with the same id', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, orderM.showById('1')];
+    it('Should return one order', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, o_total, user_id;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .get("/orders/ ".concat(order.id))
+                        .set('Content-type', 'application/json')];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toBe(1);
-                    expect(result.o_total).toBe(100);
-                    expect(result.user_id).toBe(1);
+                    result = _b.sent();
+                    console.log("the order endpoint test result get order by ID: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, o_total = _a.o_total, user_id = _a.user_id;
+                    expect(id).toBe(order.id);
+                    expect(o_total).toBe(100);
+                    expect(user_id).toBe(1);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('updateById method should return one order with new data', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, orderM.updateById(__assign(__assign({}, order), { o_total: 90, id: 1 }))];
+    it('Should update order by Id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, o_total;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .put("/orders/ ".concat(order.id))
+                        .set('Content-type', 'application/json')
+                        .send({
+                        o_total: 150, id: order.id
+                    })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toBe(1);
-                    expect(result.o_total).toBe(90);
+                    result = _b.sent();
+                    console.log("the order endpoint test result update order: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, o_total = _a.o_total;
+                    expect(id).toBe(order.id);
+                    expect(o_total).toBe(150);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('create method should add new order details', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, orderM.create_o_d(parseInt(order.id), 1, 1)];
-                case 1:
-                    result = _a.sent();
-                    expect(result).toEqual({
-                        id: 1,
+    it('Should create a new order details', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, order_id, b_count, book_id;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .post("/orders/ ".concat(order.id, "/books"))
+                        .set('Content-type', 'application/json')
+                        .send({
                         order_id: 1,
                         b_count: 1,
                         book_id: 1
-                    });
+                    })];
+                case 1:
+                    result = _b.sent();
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, order_id = _a.order_id, b_count = _a.b_count, book_id = _a.book_id;
+                    expect(id).toBe(1);
+                    expect(order_id).toBe(order.id);
+                    expect(b_count).toBe(1);
+                    expect(book_id).toBe(1);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('deleteById method should remove one order with the same id', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, orderM.deleteById('1')];
+    it('Should delete one order by Id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, o_total;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .delete("/orders/ ".concat(order.id))
+                        .set('Content-type', 'application/json')
+                        .send({ id: order.id })];
                 case 1:
-                    _a.sent();
-                    return [4 /*yield*/, orderM.index()];
-                case 2:
-                    result = _a.sent();
-                    expect(result.length).toBeGreaterThan(0);
+                    result = _b.sent();
+                    console.log("the order endpoint test result delete order: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, o_total = _a.o_total;
+                    expect(id).toBe(order.id);
+                    expect(o_total).toBe(150);
                     return [2 /*return*/];
             }
         });

@@ -47,7 +47,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, categoryM.create(req.body)];
             case 1:
                 newcategory = _a.sent();
-                res.json(newcategory);
+                res.json({ data: newcategory });
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
@@ -65,7 +65,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
             case 0: return [4 /*yield*/, categoryM.index()];
             case 1:
                 categories = _a.sent();
-                res.json(categories);
+                res.json({ data: categories });
                 return [2 /*return*/];
         }
     });
@@ -77,7 +77,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
             case 0: return [4 /*yield*/, categoryM.showById(req.params.id)];
             case 1:
                 category = _a.sent();
-                res.json(category);
+                res.json({ data: category });
                 return [2 /*return*/];
         }
     });
@@ -91,7 +91,7 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, categoryM.updateById(req.body)];
             case 1:
                 updatedcategory = _a.sent();
-                res.json(updatedcategory);
+                res.json({ data: updatedcategory });
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _a.sent();
@@ -111,7 +111,7 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, categoryM.deleteById(req.body.id)];
             case 1:
                 category = _a.sent();
-                res.json(category);
+                res.json({ data: category });
                 return [3 /*break*/, 3];
             case 2:
                 error_3 = _a.sent();

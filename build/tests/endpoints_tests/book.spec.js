@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -51,27 +40,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var book_1 = require("../../models/book");
+var database_1 = __importDefault(require("../../database"));
+var supertest_1 = __importDefault(require("supertest"));
+var index_1 = __importDefault(require("../../index"));
 var category_1 = require("../../models/category");
 var author_1 = require("../../models/author");
 var publisher_1 = require("../../models/publisher");
-var database_1 = __importDefault(require("../../database"));
 var bookM = new book_1.bookModel();
 var category = new category_1.categoryModel();
 var author = new author_1.authorModel();
 var publisher = new publisher_1.publisherModel();
-describe("book Model", function () {
-    var book = {
-        title: 'ANbiaa Allah',
-        author_id: 1,
-        category_id: 1,
-        publisher_id: 1,
-        published_year: '1999',
-        pages: 200, price: 100,
-        isbn: '30009771481037',
-        in_stock: 6
-    };
+var request = (0, supertest_1.default)(index_1.default);
+var book = {
+    title: 'ANbiaa Allah',
+    author_id: 1,
+    category_id: 1,
+    publisher_id: 1,
+    published_year: '1999',
+    pages: 200, price: 100,
+    isbn: '30009771481037',
+    in_stock: 6
+};
+describe("book endpoints CRUD methods test", function () {
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var createBook;
+        var createdbook;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, category.create({ name: 'literature' })];
@@ -85,8 +77,8 @@ describe("book Model", function () {
                     _a.sent();
                     return [4 /*yield*/, bookM.create(book)];
                 case 4:
-                    createBook = _a.sent();
-                    book.id = createBook.id;
+                    createdbook = _a.sent();
+                    book.id = createdbook.id;
                     return [2 /*return*/];
             }
         });
@@ -119,116 +111,119 @@ describe("book Model", function () {
             }
         });
     }); });
-    it('Should have an index method', function () {
-        expect(bookM.index).toBeDefined();
-    });
-    it('Should have an create method', function () {
-        expect(bookM.create).toBeDefined();
-    });
-    it('Should have an showById method', function () {
-        expect(bookM.showById).toBeDefined();
-    });
-    it('Should have an updateById method', function () {
-        expect(bookM.updateById).toBeDefined();
-    });
-    it('Should have an deleteById method', function () {
-        expect(bookM.deleteById).toBeDefined();
-    });
-    it('create method should add new book', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, bookM.create({
-                        title: 'Albraq',
+    it('Should create a new book', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, title, author_id, category_id, publisher_id, published_year, pages, price, isbn, in_stock;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .post('/books')
+                        .set('Content-type', 'application/json')
+                        .send({
+                        title: 'test_book',
                         author_id: 1,
                         category_id: 1,
                         publisher_id: 1,
-                        published_year: '2004',
-                        pages: 100, price: 30,
-                        isbn: '30009771481055',
-                        in_stock: 4
+                        published_year: '2022',
+                        pages: 200, price: 100,
+                        isbn: '30009771481088',
+                        in_stock: 20
                     })];
                 case 1:
-                    result = _a.sent();
-                    expect(result).toEqual({
-                        id: 2,
-                        title: 'Albraq',
-                        author_id: 1,
-                        category_id: 1,
-                        publisher_id: 1,
-                        published_year: '2004',
-                        pages: 100, price: 30,
-                        isbn: '30009771481055',
-                        in_stock: 4
-                    });
+                    result = _b.sent();
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, title = _a.title, author_id = _a.author_id, category_id = _a.category_id, publisher_id = _a.publisher_id, published_year = _a.published_year, pages = _a.pages, price = _a.price, isbn = _a.isbn, in_stock = _a.in_stock;
+                    expect(id).toBe(2);
+                    expect(title).toBe('test_book');
+                    expect(author_id).toBe(1);
+                    expect(category_id).toBe(1);
+                    expect(publisher_id).toBe(1);
+                    expect(published_year).toBe('2022');
+                    expect(pages).toBe(200);
+                    expect(price).toBe(100);
+                    expect(isbn).toBe('30009771481088');
+                    expect(in_stock).toBe(20);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('Index method should return a list of books', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('Should List all books', function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, bookM.index()];
+                case 0: return [4 /*yield*/, request
+                        .get('/books')
+                        .set('Content-type', 'application/json')];
                 case 1:
                     result = _a.sent();
-                    expect(result.length).toBeGreaterThan(0);
+                    console.log("the book endpoint test result: " + result.body);
+                    expect(result.status).toBe(200);
+                    expect(result.body.data.length).toBeGreaterThan(0);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('showById method should return one book with the same id', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, bookM.showById('1')];
+    it('Should return one book', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, title, author_id, category_id, publisher_id, published_year, pages, price, isbn, in_stock;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .get("/books/ ".concat(book.id))
+                        .set('Content-type', 'application/json')];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toBe(1);
-                    expect(result.title).toBe(book.title);
-                    expect(result.author_id).toBe(book.author_id);
-                    expect(result.category_id).toBe(book.category_id);
-                    expect(result.publisher_id).toBe(book.publisher_id);
-                    expect(result.published_year).toBe(book.published_year);
-                    expect(result.pages).toBe(book.pages);
-                    expect(result.price).toBe(book.price);
-                    expect(result.isbn).toBe(book.isbn);
-                    expect(result.in_stock).toBe(book.in_stock);
+                    result = _b.sent();
+                    console.log("the book endpoint test result get book by ID: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, title = _a.title, author_id = _a.author_id, category_id = _a.category_id, publisher_id = _a.publisher_id, published_year = _a.published_year, pages = _a.pages, price = _a.price, isbn = _a.isbn, in_stock = _a.in_stock;
+                    expect(id).toBe(book.id);
+                    expect(title).toBe('ANbiaa Allah');
+                    expect(author_id).toBe(1);
+                    expect(category_id).toBe(1);
+                    expect(publisher_id).toBe(1);
+                    expect(published_year).toBe('1999');
+                    expect(pages).toBe(200);
+                    expect(price).toBe(100);
+                    expect(isbn).toBe('30009771481037');
+                    expect(in_stock).toBe(6);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('updateById method should return one book with new data', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, bookM.updateById(__assign(__assign({}, book), { title: 'Anbiaa Allah', published_year: '1972', pages: 478, in_stock: 5, id: 1 }))];
+    it('Should update book by Id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, title;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .put("/books/ ".concat(book.id))
+                        .set('Content-type', 'application/json')
+                        .send({
+                        title: 'test_update', id: book.id
+                    })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toBe(1);
-                    expect(result.title).toBe('Anbiaa Allah');
-                    expect(result.author_id).toBe(book.author_id);
-                    expect(result.category_id).toBe(book.category_id);
-                    expect(result.publisher_id).toBe(book.publisher_id);
-                    expect(result.published_year).toBe('1972');
-                    expect(result.pages).toBe(478);
-                    expect(result.price).toBe(book.price);
-                    expect(result.isbn).toBe(book.isbn);
-                    expect(result.in_stock).toBe(5);
+                    result = _b.sent();
+                    console.log("the book endpoint test result update book: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, title = _a.title;
+                    expect(id).toBe(book.id);
+                    expect(title).toBe('test_update');
                     return [2 /*return*/];
             }
         });
     }); });
-    it('Delete method should remove one book with the same id', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    bookM.deleteById('1');
-                    return [4 /*yield*/, bookM.index()];
+    it('Should delete one book by Id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, title;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .delete("/books/ ".concat(book.id))
+                        .set('Content-type', 'application/json')
+                        .send({ id: book.id })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.length).toBeGreaterThan(0);
+                    result = _b.sent();
+                    console.log("the book endpoint test result delete book: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, title = _a.title;
+                    expect(id).toBe(book.id);
+                    expect(title).toBe('test_update');
                     return [2 /*return*/];
             }
         });

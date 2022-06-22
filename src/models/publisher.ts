@@ -70,7 +70,7 @@ export class publisherModel {
         }
     }
 
-    async deleteById(id: string): Promise<publisher> {
+    async deleteById(id: string): Promise<publisher[]> {
         try {
         const conn = await db.connect();
         const sql = 'Delete from publishers Where id = ($1) returning id, p_name, p_address, phone';

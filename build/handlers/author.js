@@ -50,7 +50,7 @@ var create = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 newAuthor = _a.sent();
                 console.log('After calling create author method');
                 // const newAuthor = await authorM.create(authorT);
-                res.json(newAuthor);
+                res.json({ data: newAuthor });
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
@@ -70,7 +70,7 @@ var index = function (_req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, authorM.index()];
             case 1:
                 authors = _a.sent();
-                res.json(authors);
+                res.json({ data: authors });
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _a.sent();
@@ -90,7 +90,7 @@ var show = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, authorM.showById(req.params.id)];
             case 1:
                 author = _a.sent();
-                res.json(author);
+                res.json({ data: author });
                 _a.label = 2;
             case 2: return [2 /*return*/];
         }
@@ -106,7 +106,7 @@ var edit = function (req, res) { return __awaiter(void 0, void 0, void 0, functi
                 return [4 /*yield*/, authorM.updateById(req.body)];
             case 1:
                 updatedAuthor = _a.sent();
-                res.json(updatedAuthor);
+                res.json({ data: updatedAuthor });
                 return [3 /*break*/, 3];
             case 2:
                 error_3 = _a.sent();
@@ -126,7 +126,7 @@ var remove = function (req, res) { return __awaiter(void 0, void 0, void 0, func
                 return [4 /*yield*/, authorM.deleteById(req.body.id)];
             case 1:
                 author = _a.sent();
-                res.json(author);
+                res.json({ data: author });
                 return [3 /*break*/, 3];
             case 2:
                 error_4 = _a.sent();

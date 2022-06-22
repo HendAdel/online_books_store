@@ -57,7 +57,7 @@ export class userModel {
             const sql = `select id, u_name, email, u_password from users`;
             console.log("Test show all users sql: " + sql);
             const result = await conn.query(sql);
-            console.log("Test show all users result: " + result.rows);
+            console.log("Test show all users first u name: " + result.rows[0].u_name);
             conn.release();
             return result.rows;
         }
@@ -108,7 +108,7 @@ export class userModel {
             console.log("Test update user by id sql: " + sql);
             const hash = hashPassword(u.u_password);
             const result = await conn.query(sql, [u.u_name, u.email, hash, u.id]);
-            console.log("Test update by id result: " + result);
+            console.log("Test update by id result: " + result.rows[0].id);
             conn.release();
             return result.rows[0];
         }

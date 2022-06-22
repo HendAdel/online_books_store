@@ -31,10 +31,11 @@ describe("User login authentication model test", ()=> {
     });
 
     it('login_authenticate should return authenticated user.', async() => {
-        const result = await userM.login_authenticate(user.email, user.u_password);        
-        expect(result?.u_name).toBe('Abd El-Rahman');
-        expect(result?.email).toBe('test@bookstore.com');
-
+        const result = await userM.login_authenticate(user.email, user.u_password);
+        expect(result?.u_name).toBe(user.u_name);
+        expect(result?.email).toBe(user.email);
+// expect(result?.u_name).toBe('Abd El-Rahman');
+        // expect(result?.email).toBe('test@bookstore.com');
         });    
   
     it('Should to be failed authenticat with wrong email', async() => {

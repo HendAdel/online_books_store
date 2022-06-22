@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,23 +41,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var author_1 = require("../../models/author");
 var database_1 = __importDefault(require("../../database"));
+var supertest_1 = __importDefault(require("supertest"));
+var index_1 = __importDefault(require("../../index"));
 var authorM = new author_1.authorModel();
-describe("Author Model", function () {
-    var author = {
-        name: 'Ahmed Bahget'
-    };
+var request = (0, supertest_1.default)(index_1.default);
+var author = {
+    name: 'Stephen R. Covey'
+};
+describe("author endpoints CRUD methods test", function () {
     beforeAll(function () { return __awaiter(void 0, void 0, void 0, function () {
-        var conn, sql;
+        var createdauthor;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, database_1.default.connect()];
+                case 0: return [4 /*yield*/, authorM.create(author)];
                 case 1:
-                    conn = _a.sent();
-                    sql = "Insert into authors (name) Values ($1) returning id, name";
-                    return [4 /*yield*/, conn.query(sql, [author.name])];
-                case 2:
-                    _a.sent();
-                    conn.release();
+                    createdauthor = _a.sent();
+                    author.id = createdauthor.id;
                     return [2 /*return*/];
             }
         });
@@ -80,103 +68,109 @@ describe("Author Model", function () {
                 case 0: return [4 /*yield*/, database_1.default.connect()];
                 case 1:
                     conn = _a.sent();
-                    sql = 'DELETE FROM orders_details; \nALTER SEQUENCE orders_details_id_seq RESTART WITH 1;';
+                    sql = 'DELETE FROM books; \nALTER SEQUENCE books_id_seq RESTART WITH 1;';
                     return [4 /*yield*/, conn.query(sql)];
                 case 2:
                     _a.sent();
-                    // sql = 'DELETE FROM orders; \nALTER SEQUENCE orders_id_seq RESTART WITH 1;';
-                    // await conn.query(sql);
-                    sql = 'DELETE FROM books; \nALTER SEQUENCE books_id_seq RESTART WITH 1;';
-                    return [4 /*yield*/, conn.query(sql)];
-                case 3:
-                    _a.sent();
-                    // sql = 'DELETE FROM categories; \nALTER SEQUENCE categories_id_seq RESTART WITH 1;';
-                    // await conn.query(sql);
-                    // sql = 'DELETE FROM publishers; \nALTER SEQUENCE publishers_id_seq RESTART WITH 1;';
-                    // await conn.query(sql);
-                    // sql = 'DELETE FROM authors Where id in (select author_id from books); delete from books; \nALTER SEQUENCE authors_id_seq RESTART WITH 1;';
                     sql = 'DELETE FROM authors; \nALTER SEQUENCE authors_id_seq RESTART WITH 1;';
                     return [4 /*yield*/, conn.query(sql)];
-                case 4:
+                case 3:
                     _a.sent();
                     conn.release();
                     return [2 /*return*/];
             }
         });
     }); });
-    it('Should have an index method', function () {
-        expect(authorM.index).toBeDefined();
-    });
-    it('Create method should return a New Author', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var createdAuthor;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, authorM.create({
-                        name: 'Mostafa Mahmoued',
+    it('Should create a new author', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, name;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .post('/authors')
+                        .set('Content-type', 'application/json')
+                        .send({
+                        name: 'test_author'
                     })];
                 case 1:
-                    createdAuthor = _a.sent();
-                    expect(createdAuthor).toEqual({
-                        id: createdAuthor.id,
-                        name: 'Mostafa Mahmoued'
-                    });
+                    result = _b.sent();
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, name = _a.name;
+                    expect(id).toBe(2);
+                    expect(name).toBe('test_author');
                     return [2 /*return*/];
             }
         });
     }); });
-    it('Index method should return a list of authors', function () { return __awaiter(void 0, void 0, void 0, function () {
+    it('Should List all authors', function () { return __awaiter(void 0, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, authorM.index()];
+                case 0: return [4 /*yield*/, request
+                        .get('/authors')
+                        .set('Content-type', 'application/json')];
                 case 1:
                     result = _a.sent();
-                    // expect(result).toEqual([{
-                    //     id: 1,
-                    //     name: "Ahmed Bahget"
-                    // }]);
-                    expect(result.length).toBeGreaterThan(0);
+                    console.log("the author endpoint test result: " + result.body);
+                    expect(result.status).toBe(200);
+                    expect(result.body.data.length).toBeGreaterThan(0);
                     return [2 /*return*/];
             }
         });
     }); });
-    it('ShowById method should return one author with the same id', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, authorM.showById('1')];
+    it('Should return one author', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, name;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .get("/authors/ ".concat(author.id))
+                        .set('Content-type', 'application/json')];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toBe(1);
-                    expect(result.name).toBe(author.name);
+                    result = _b.sent();
+                    console.log("the author endpoint test result get author by ID: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, name = _a.name;
+                    expect(id).toBe(author.id);
+                    expect(name).toBe('Stephen R. Covey');
                     return [2 /*return*/];
             }
         });
     }); });
-    it('Update method should return one author with new data', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, authorM.updateById(__assign(__assign({}, author), { name: 'Ahmed Sh. Bahget', id: 1 }))];
+    it('Should update author by Id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, name;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .put("/authors/ ".concat(author.id))
+                        .set('Content-type', 'application/json')
+                        .send({
+                        name: 'test_update', id: author.id
+                    })];
                 case 1:
-                    result = _a.sent();
-                    expect(result.id).toBe(1);
-                    expect(result.name).toBe('Ahmed Sh. Bahget');
+                    result = _b.sent();
+                    console.log("the Author endpoint test result update author: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, name = _a.name;
+                    expect(id).toBe(author.id);
+                    expect(name).toBe('test_update');
                     return [2 /*return*/];
             }
         });
     }); });
-    it('Delete method should remove one author with the same id', function () { return __awaiter(void 0, void 0, void 0, function () {
-        var result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    authorM.deleteById('1');
-                    return [4 /*yield*/, authorM.index()];
+    it('Should delete one author by Id', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var result, _a, id, name;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, request
+                        .delete("/authors/ ".concat(author.id))
+                        .set('Content-type', 'application/json')
+                        .send({ id: author.id })];
                 case 1:
-                    result = _a.sent();
-                    console.log(result);
-                    expect(result.length).toBe(1);
+                    result = _b.sent();
+                    console.log("the author endpoint test result delete author: " + result.body.data);
+                    expect(result.status).toBe(200);
+                    _a = result.body.data, id = _a.id, name = _a.name;
+                    expect(id).toBe(author.id);
+                    expect(name).toBe('test_update');
                     return [2 /*return*/];
             }
         });

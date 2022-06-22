@@ -76,7 +76,7 @@ export class authorModel {
     }
   }
 
-  async deleteById(id: string): Promise<author> {
+  async deleteById(id: string): Promise<author[]> {
     try {
       console.log('test update author model');
       const conn = await db.connect();
@@ -92,4 +92,5 @@ export class authorModel {
       throw new Error(`cannot delete the author ${err}`);
     }
   }
+  
 }

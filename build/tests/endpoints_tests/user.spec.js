@@ -41,7 +41,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = require("../../models/user");
 var database_1 = __importDefault(require("../../database"));
-// import { request } from "http";
 var supertest_1 = __importDefault(require("supertest"));
 var index_1 = __importDefault(require("../../index"));
 var userM = new user_1.userModel();
@@ -153,13 +152,15 @@ describe("user endpoints CRUD methods test", function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, request
-                        .get('/users')
-                        .set('Content-type', 'application/json')
-                        .set('Authorization', "Bearer ".concat(save_token))];
+                case 0:
+                    console.log("Insex endpoint the token is: ".concat(save_token));
+                    return [4 /*yield*/, request
+                            .get('/users')
+                            // .set('Content-type', 'application/json')            
+                            .set('Authorization', "Bearer ".concat(save_token))];
                 case 1:
                     result = _a.sent();
-                    console.log("the login endpoint test result: " + result.body.data);
+                    console.log("the login endpoint test result: " + result.body);
                     expect(result.status).toBe(200);
                     expect(result.body.data.length).toBeGreaterThan(0);
                     return [2 /*return*/];
@@ -194,8 +195,8 @@ describe("user endpoints CRUD methods test", function () {
                         .set('Content-type', 'application/json')
                         .set('Authorization', "Bearer ".concat(save_token))
                         .send({
-                        u_name: 'test_update', email: 'testU@bookstore.com',
-                        u_password: '123654'
+                        u_name: 'test_update', email: 'test@bookstore.com',
+                        u_password: '123654', id: user.id
                     })];
                 case 1:
                     result = _b.sent();
@@ -204,7 +205,7 @@ describe("user endpoints CRUD methods test", function () {
                     _a = result.body.data, id = _a.id, u_name = _a.u_name, email = _a.email;
                     expect(id).toBe(user.id);
                     expect(u_name).toBe('test_update');
-                    expect(email).toBe('testU@bookstore.com');
+                    expect(email).toBe('test@bookstore.com');
                     return [2 /*return*/];
             }
         });
@@ -216,7 +217,8 @@ describe("user endpoints CRUD methods test", function () {
                 case 0: return [4 /*yield*/, request
                         .delete("/users/ ".concat(user.id))
                         .set('Content-type', 'application/json')
-                        .set('Authorization', "Bearer ".concat(save_token))];
+                        .set('Authorization', "Bearer ".concat(save_token))
+                        .send({ id: user.id })];
                 case 1:
                     result = _b.sent();
                     console.log("the login endpoint test result delete user: " + result.body.data);
@@ -224,7 +226,7 @@ describe("user endpoints CRUD methods test", function () {
                     _a = result.body.data, id = _a.id, u_name = _a.u_name, email = _a.email;
                     expect(id).toBe(user.id);
                     expect(u_name).toBe('test_update');
-                    expect(email).toBe('testU@bookstore.com');
+                    expect(email).toBe('test@bookstore.com');
                     return [2 /*return*/];
             }
         });

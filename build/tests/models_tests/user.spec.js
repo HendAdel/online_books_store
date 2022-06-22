@@ -78,24 +78,19 @@ describe("user Model", function () {
         var conn, sql;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, database_1.default.connect()];
+                case 0: return [4 /*yield*/, database_1.default.connect()
+                    // let sql = 'DELETE FROM books; \nALTER SEQUENCE books_id_seq RESTART WITH 1;';
+                    // await conn.query(sql);
+                    // sql = 'DELETE FROM orders_details; \nALTER SEQUENCE orders_details_id_seq RESTART WITH 1;';
+                    // await conn.query(sql);
+                    // sql = 'DELETE FROM orders; \nALTER SEQUENCE orders_id_seq RESTART WITH 1;';
+                    // await conn.query(sql);        
+                ];
                 case 1:
                     conn = _a.sent();
-                    sql = 'DELETE FROM books; \nALTER SEQUENCE books_id_seq RESTART WITH 1;';
-                    return [4 /*yield*/, conn.query(sql)];
-                case 2:
-                    _a.sent();
-                    sql = 'DELETE FROM orders_details; \nALTER SEQUENCE orders_details_id_seq RESTART WITH 1;';
-                    return [4 /*yield*/, conn.query(sql)];
-                case 3:
-                    _a.sent();
-                    sql = 'DELETE FROM orders; \nALTER SEQUENCE orders_id_seq RESTART WITH 1;';
-                    return [4 /*yield*/, conn.query(sql)];
-                case 4:
-                    _a.sent();
                     sql = 'DELETE FROM users; \nALTER SEQUENCE users_id_seq RESTART WITH 1;';
                     return [4 /*yield*/, conn.query(sql)];
-                case 5:
+                case 2:
                     _a.sent();
                     conn.release();
                     return [2 /*return*/];
@@ -152,12 +147,12 @@ describe("user Model", function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, userM.updateById(__assign(__assign({}, user), { u_name: 'Abd El-Rahman Mostafa', email: 'a_mostafa@bookstore.com', id: 1 }))];
+                case 0: return [4 /*yield*/, userM.updateById(__assign(__assign({}, user), { u_name: 'Abd El-Rahman Mostafa', email: 'test_model@bookstore.com', id: 1 }))];
                 case 1:
                     result = _a.sent();
                     expect(result.id).toBe(1);
                     expect(result.u_name).toBe('Abd El-Rahman Mostafa');
-                    expect(result.email).toBe('a_mostafa@bookstore.com');
+                    expect(result.email).toBe('test_model@bookstore.com');
                     return [2 /*return*/];
             }
         });
@@ -171,7 +166,7 @@ describe("user Model", function () {
                     return [4 /*yield*/, userM.index()];
                 case 1:
                     result = _a.sent();
-                    expect(result).toEqual([]);
+                    expect(result.length).toBeGreaterThan(0);
                     return [2 /*return*/];
             }
         });
