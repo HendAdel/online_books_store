@@ -4,11 +4,8 @@ import { author, authorModel } from "../models/author";
 const authorM = new authorModel();
 
 const create = async (req: Request, res: Response) => {
-    try {
-        console.log('test create author route' + req.body);        
-        const newAuthor = await authorM.create(req.body);
-        console.log('After calling create author method');
-        // const newAuthor = await authorM.create(authorT);
+    try {       
+        const newAuthor = await authorM.create(req.body);;
         res.json({data: newAuthor});
     }
     catch (error) {
@@ -38,11 +35,7 @@ const show = async (req: Request, res: Response) => {
 
 const edit = async (req: Request, res: Response) => {
     try {
-        console.log('edit handler');
-        // const authorT: author = {
-        //     id: req.body.id,
-        //     name: req.body.name
-        // }
+        
         const updatedAuthor = await authorM.updateById(req.body);
         res.json({data: updatedAuthor});
     }

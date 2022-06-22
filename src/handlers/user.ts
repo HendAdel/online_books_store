@@ -26,28 +26,21 @@ const create = async (req: Request, res: Response) => {
 }
 
 const index = async (_req: Request, res: Response) => {
-    console.log("Test show all users handler");
+    
     const users = await userM.index();
-    console.log("Test show all users handler after calling index method");
-    console.log("Test show all users handler result first user emails: " + users[0].email);
-    // res.send('this is the user index route');
     res.json({data:users});
 }
 
 const show = async (req: Request, res: Response) => {
-    console.log("Test show by id handler");
+    
     const oneUser = await userM.showById(req.params.id as unknown as string);
-    console.log("Test show by id after calling model method");
-    console.log("Test show by id user: " + oneUser);
     res.json({data:oneUser});
 }
 
 const edit = async (req: Request, res: Response) => {
     try {
-        console.log("Test Update by id handler");       
+              
         const updateduser = await userM.updateById(req.body);
-        console.log("Test update H by id user email: " + updateduser.email);
-        console.log("Test update H by id after calling model method");
         
         res.json({data:updateduser});
     }
@@ -70,12 +63,9 @@ const remove = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
     try {
-        console.log("Test login handler"); 
         const user = await userM.login_authenticate(req.body.email, req.body.u_password);
-        console.log("Test login handler get user" + user); 
         if(user){
             const token = Jwt.sign({user}, config.token as unknown as string);
-        console.log("Test login handler make token: " + token); 
          return res.json({
             status:'Success',
             data: { ...user, token },

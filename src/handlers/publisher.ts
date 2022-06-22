@@ -29,9 +29,8 @@ const show = async (req: Request, res: Response) => {
 
 const edit = async (req: Request, res: Response) => {
     try {
-        console.log("update handler" + req.body.p_name + " " + req.body.p_address + " " + req.body.phone + " " + req.body.id);
+        
         const updatedpublisher = await publisherM.updateById(req.body);
-        console.log("update handler req body: " + updatedpublisher);
         res.json({data: updatedpublisher});
     }
     catch (error) {

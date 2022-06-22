@@ -30,7 +30,7 @@ npm install -g db-migrate > will install db-migrate globaly
 yarn add db-migrate db-migrate-pg > will install db-migrate package to the project
 
 - jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
+- jasmine and supertest from npm for testing
 
 ## Steps to Completion
 
@@ -70,6 +70,11 @@ Set up the Express handlers to route incoming requests to the correct model meth
     app.delete('/users/:id', remove); Delete user by Id Delete method(http://localhost:3000/users/id)
 
 ##### Orders Endpoints:
+    app.post('/orders', create); Create order Post method(http://localhost:3000/orders)
+    app.get('/orders', index); Show all orders Get method(http://localhost:3000/orders)
+    app.get('/orders/:id', show); Show order by Id Get method(localhost:3000/orders/id)
+    app.put('/orders/:id', edit); Update order by Id Put method(http://localhost:3000/orders/id) 
+    app.delete('/orders/:id', remove); Delete oder by Id Delete method(http://localhost:3000/orders/id)
     app.post('/orders/:id/books', create_o_d); Create order details post method(http://localhost:3000/orders/3/books)
 
 ### 5. JWTs
@@ -81,3 +86,16 @@ Add JWT functionality as shown in the course. Make sure that JWTs are required f
 Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database. 
 
 Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+###### Env variables
+PORT=3000
+NODE_ENV=dev
+ 
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=books_store
+POSTGRES_DB_TEST=books_store_test
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=P@SQL22
+BCRYPT_PASSWORD=book-stor-crypte
+SALT_ROUNDS=12
+JSON_SECRET_TOKEN=book-stor-token

@@ -48,9 +48,8 @@ const edit = async (req: Request, res: Response) => {
 
 const remove = async (req: Request, res: Response) => {
     try {
-        console.log('delete order H orderId: ' + req.body.id);
         const order = await orderM.deleteById(req.body.id);
-        console.log('deleted order H object: ' + order);
+        
         res.json({data: order});
     } catch (error) {
         res.status(400);
@@ -62,15 +61,10 @@ const remove = async (req: Request, res: Response) => {
 const create_o_d = async (req: Request, res: Response) => {
 
     const orderId = parseInt(req.body.order_id);
-    console.log('order H orderId: ' + orderId);
-    
     const count = req.body.b_count;
-    console.log('book count:' + count);
     const bookId = req.body.book_id;
-    console.log('order H bookId' + bookId);
     try {
         const neworder = await orderM.create_o_d(orderId, count, bookId);
-        console.log('order details after calling insert method' + neworder);
         res.json({data: neworder});
     }
     catch (error) {

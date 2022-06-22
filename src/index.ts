@@ -30,24 +30,12 @@ app.use(express.json());
 
 // add routing for / path
 app.get('/', (req: Request, res: Response) => {
-  console.log(`user routes in index page`); 
   res.json({
     message: 'Hello World 🌍'
   });
 });
 
 
-
-// app.use('/api', userRoutes)
-// app.get('/users', (_req: Request, res: Response) => {
-//   try {
-//     console.log(`user routes in index page`)
-//       res.send('this is the Users INDEX route')
-//   } catch (err) {
-//       res.status(400)
-//       res.json(err)
-//   }
-// })
 categoryRoutes(app);
 publisherRoutes(app);
 userRoutes(app);
